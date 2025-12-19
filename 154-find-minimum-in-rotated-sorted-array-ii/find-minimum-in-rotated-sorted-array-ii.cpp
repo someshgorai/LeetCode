@@ -13,7 +13,6 @@ public:
                 high--;
                 continue;
             }
-
             
             else if (nums[low] <= nums[mid]) {
                 ans = min(ans, nums[low]);
