@@ -23,8 +23,8 @@ public:
         int n = nums.size();
 
         int lower = lowerBound(0, n-1, nums, target);
-        int upper = upperBound(0, n-1, nums, target)-1;
         if (lower == n || nums[lower] != target) return {-1, -1};
+        int upper = upperBound(0, n-1, nums, target)-1;
 
         return {lower, upper};
     }
