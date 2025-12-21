@@ -6,7 +6,7 @@ private:
             if (i<=day) {
                 count++;
                 if (count == k) {
-                    bouquets++;
+                    if (++bouquets == m) return true;
                     count = 0;
                 }
             }
@@ -18,12 +18,12 @@ private:
     }
 public:
     int minDays(vector<int>& bloomDay, int m, int k) {
-        int n = bloomDay.size(), b = m;
+        int n = bloomDay.size();
         if (1LL * m * k > 1LL * n) return -1;
         int high = *max_element(bloomDay.begin(), bloomDay.end());
         int low = *min_element(bloomDay.begin(), bloomDay.end());
         while (low <= high) {
-            long long mid = (low+high)/2;
+            int mid = low + (high - low) / 2;
             if (isPossible(bloomDay, m, k, mid)) {
                 high = mid - 1;
             }
