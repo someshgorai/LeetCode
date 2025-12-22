@@ -1,21 +1,21 @@
 class Solution {
 private:
-    int func(vector<int>& nums, int d, int threshold) {
+    bool func(vector<int>& nums, int d, int threshold) {
         int sum = 0;
         for (int i : nums) {
             sum += (i + d - 1)/d;
-            if (sum > threshold) return threshold+1;
+            if (sum > threshold) return false;
         }
-        return sum;
+        return true;
     }
 public:
     int smallestDivisor(vector<int>& nums, int threshold) {
         int high = *max_element(nums.begin(), nums.end());
         int low = 1;
         while (low <= high) {
-            long long mid = (low+high)/2;
+            int mid = low + (high - low) / 2;
 
-            if (func(nums, mid, threshold) <= threshold) {
+            if (func(nums, mid, threshold)) {
                 high = mid - 1;
             }
             else {
