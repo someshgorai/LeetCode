@@ -1,16 +1,16 @@
 class Solution {
 private:
-    double func(vector<int>& nums, float d) {
-        double sum = 0;
-        for (float i : nums) {
-            sum += ceil (i/d);
+    int func(vector<int>& nums, int d) {
+        int sum = 0;
+        for (int i : nums) {
+            sum += (i + d - 1)/d;
         }
         return sum;
     }
 public:
     int smallestDivisor(vector<int>& nums, int threshold) {
         int high = *max_element(nums.begin(), nums.end());
-        int low = 0;
+        int low = 1;
         while (low <= high) {
             long long mid = (low+high)/2;
 
