@@ -1,9 +1,10 @@
 class Solution {
 private:
-    int func(vector<int>& nums, int d) {
+    int func(vector<int>& nums, int d, int threshold) {
         int sum = 0;
         for (int i : nums) {
             sum += (i + d - 1)/d;
+            if (sum > threshold) return threshold+1;
         }
         return sum;
     }
@@ -14,7 +15,7 @@ public:
         while (low <= high) {
             long long mid = (low+high)/2;
 
-            if (func(nums, mid) <= threshold) {
+            if (func(nums, mid, threshold) <= threshold) {
                 high = mid - 1;
             }
             else {
