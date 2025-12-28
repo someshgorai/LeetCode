@@ -1,20 +1,4 @@
 class Solution {
-private:
-    void placeNum(vector<int> &nums, int k) {
-        int low = 0, high = nums.size()-1;
-        while (low <= high) {
-            int mid = (high-low)/2 + low;
-            if (nums[mid] == k) return;
-            if (nums[mid] > k) {
-                high = mid - 1;
-            }
-            else {
-                low = mid + 1;
-            }
-        }
-        nums[low] = k;
-        return;
-    }
 public:
     int lengthOfLIS(vector<int>& nums) {
         int n = nums.size(), maxLen = 1;
@@ -26,7 +10,8 @@ public:
                 maxLen++;
             }
             else {
-                placeNum(seq, nums[i]);
+                int idx = lower_bound(seq.begin(), seq.end(), nums[i]) - seq.begin();
+                seq[idx] = nums[i];
             }
         }
         return maxLen;
