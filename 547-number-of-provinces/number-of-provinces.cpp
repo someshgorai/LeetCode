@@ -6,10 +6,11 @@ private:
         while(!q.empty()) {
             int node = q.front();
             q.pop();
-            vis[node] = 1;
+            
             for (auto i=0; i<n; i++) {
                 if (!vis[i] && isConnected[node][i]) {
                     q.push(i);
+                    vis[i] = 1;
                 }
             }
         }
