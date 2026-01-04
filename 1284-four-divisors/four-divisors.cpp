@@ -1,11 +1,20 @@
 class Solution {
 private:
     int divisors(int n) {
+        if (n < 6) return 0; 
         int cnt = 2, sum = n + 1;
-        for (int i=2; i<=(n+1)/2; i++) {
+        int limit = sqrt(n);
+        for (int i=2; i<=limit; i++) {
             if (n%i == 0) {
-                cnt++;
-                sum += i;
+                int n2 = n/i;
+                if (n2 == i) {
+                    cnt++;
+                    sum += i;
+                }
+                else {
+                    cnt += 2;
+                    sum += i + n2;
+                }
             }
             if (cnt > 4) return 0;
         }
