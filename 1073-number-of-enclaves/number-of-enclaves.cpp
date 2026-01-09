@@ -23,24 +23,14 @@ public:
         queue<pair<int, int>> q;
         vector<vector<bool>> vis(m, vector<bool> (n, false));
 
-        for (int j=0; j<n; j++) {
-            if (grid[0][j] == 1) {
-                q.emplace(0, j);
-                vis[0][j] = true;
-            }
-            if (grid[m-1][j] == 1) {
-                q.emplace(m-1, j);
-                vis[m-1][j] = true;
-            }
-        }
         for (int i=0; i<m; i++) {
-            if (grid[i][0] == 1) {
-                q.emplace(i, 0);
-                vis[i][0] = true;
-            }
-            if (grid[i][n-1] == 1) {
-                q.emplace(i, n-1);
-                vis[i][n-1] = true;
+            for (int j=0; j<n; j++) {
+                if (i == 0 || i == m-1 || j == n-1 || j == 0 ) {
+                    if (grid[i][j] == 1) {
+                        q.emplace(i, j);
+                        vis[i][j] = true;
+                    }
+                }
             }
         }
 
