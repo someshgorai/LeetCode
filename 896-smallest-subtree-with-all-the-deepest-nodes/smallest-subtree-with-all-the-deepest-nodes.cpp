@@ -10,40 +10,24 @@
  * };
  */
 class Solution {
+private:
+    pair<TreeNode*, int> dfs(TreeNode* root) {
+        if (!root) return {nullptr, 0};
+
+        auto L = dfs(root->left);
+        auto R = dfs(root->right);
+
+        if (L.second == R.second)
+            return {root, L.second + 1};
+
+        if (L.second > R.second)
+            return {L.first, L.second + 1};
+
+        return {R.first, R.second + 1};
+    }
+
 public:
     TreeNode* subtreeWithAllDeepest(TreeNode* root) {
-        if (!root) return root;
-        queue<TreeNode *> q;
-        unordered_set<TreeNode *> lastLevel;
-        unordered_map<TreeNode *, TreeNode *> relation;
-        q.push(root);
-        while (!q.empty()) {
-            int size = q.size();
-            lastLevel.clear();
-            while (size--) {
-                TreeNode *node = q.front();
-                q.pop();
-                lastLevel.insert(node);
-                if (node->left) {
-                    q.push(node->left);
-                    relation[node->left] = node;
-                }
-                if (node->right) {
-                    q.push(node->right);
-                    relation[node->right] = node;
-                }
-            }
-        }
-
-        
-        while (lastLevel.size() > 1) {
-            unordered_set<TreeNode *>next;
-            for (TreeNode *node:lastLevel) {
-                next.insert(relation[node]);
-            }
-            lastLevel = next;
-        }
-
-        return *lastLevel.begin();
+        return dfs(root).first;
     }
 };
