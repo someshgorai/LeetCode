@@ -10,7 +10,7 @@ private:
             for (int k=0; k<4; k++) {
                 int r = row + drow[k];
                 int c = col + dcol[k];
-                if (r >= 0 && r < m && c >= 0 && c < n && !vis[r][c] && grid[row][col] == 1) {
+                if (r >= 0 && r < m && c >= 0 && c < n && !vis[r][c] && grid[r][c] == 1) {
                     q.emplace(r, c);
                     vis[r][c] = true;
                 }
