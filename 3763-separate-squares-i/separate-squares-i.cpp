@@ -15,7 +15,7 @@ public:
 
         double targetArea = totalArea / 2.0;
 
-        for (int i = 0; i < 100; ++i) {
+        while (abs(low - high) > 1e-5) {
             double mid = low + (high - low) / 2.0;
             double currentArea = 0;
 
