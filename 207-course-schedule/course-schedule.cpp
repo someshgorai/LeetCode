@@ -4,8 +4,8 @@ public:
         vector<vector<int>> adjlist(numCourses);
         vector<int> indegree(numCourses, 0);
         for (vector<int> it:prerequisites) {
-            adjlist[it[1]].push_back(it[0]);
-            indegree[it[0]]++;
+            adjlist[it[0]].push_back(it[1]);
+            indegree[it[1]]++;
         }
         queue<int> q;
         for (int i=0; i<numCourses; i++) {
