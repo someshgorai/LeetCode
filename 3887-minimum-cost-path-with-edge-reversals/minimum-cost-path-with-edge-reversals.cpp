@@ -18,11 +18,11 @@ public:
             pq.pop();
             if (travelled > dist[node]) continue;
             for (auto &i : adjlist[node]) {
-                int n = i.first;
+                int v = i.first;
                 int d = i.second;
-                if (travelled + d < dist[n]) {
-                    dist[n] = travelled + d;
-                    pq.emplace(dist[n], n);
+                if (travelled + d < dist[v]) {
+                    dist[v] = travelled + d;
+                    pq.emplace(dist[v], v);
                 }
             }
         }
