@@ -1,40 +1,33 @@
 class Solution {
-    using PII = pair<int, int>;
-
 public:
     int minCost(int n, vector<vector<int>>& edges) {
-        vector<vector<PII>> g(n);
-        for (auto& e : edges) {
-            int x = e[0], y = e[1], w = e[2];
-            g[x].emplace_back(y, w);
-            g[y].emplace_back(x, 2 * w);
+        vector<vector<pair<int, int>>> adjlist(n);
+        for (auto &edge : edges) {
+            adjlist[edge[0]].push_back({edge[1], edge[2]});
+            adjlist[edge[1]].push_back({edge[0], edge[2] * 2});
         }
 
-        vector<int> d(n, INT_MAX);
-        vector<bool> v(n, false);
-        priority_queue<PII, vector<PII>, greater<PII>> q;
-        d[0] = 0;
-        q.emplace(0, 0);
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
 
-        while (!q.empty()) {
-            int x = q.top().second;
-            q.pop();
-            if (x == n - 1) {
-                return d[x];
-            }
-            // only the first time unloading requires relaxing other points
-            if (v[x]) {
-                continue;
-            }
-            v[x] = 1;
-
-            for (auto& [y, w] : g[x]) {
-                if (d[x] + w < d[y]) {
-                    d[y] = d[x] + w;
-                    q.emplace(d[y], y);
+        pq.emplace(0, 0);
+        vector<int> dist(n, INT_MAX);
+        dist[0] = 0;
+        while (!pq.empty()) {
+            int travelled = pq.top().first;
+            int node = pq.top().second;
+            pq.pop();
+            if (travelled > dist[node]) continue;
+            for (auto &i : adjlist[node]) {
+                int n = i.first;
+                int d = i.second;
+                if (travelled + d < dist[n]) {
+                    dist[n] = travelled + d;
+                    pq.emplace(dist[n], n);
                 }
             }
         }
-        return -1;
+
+        if (dist[n-1] == INT_MAX) return -1;
+        return dist[n-1];
     }
 };
