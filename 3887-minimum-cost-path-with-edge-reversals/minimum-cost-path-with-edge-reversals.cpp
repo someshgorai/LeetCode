@@ -15,6 +15,7 @@ public:
         while (!pq.empty()) {
             int travelled = pq.top().first;
             int node = pq.top().second;
+            if (node == n-1) return travelled;
             pq.pop();
             if (travelled > dist[node]) continue;
             for (auto &i : adjlist[node]) {
