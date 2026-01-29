@@ -14,6 +14,7 @@ public:
             int x = pq.top().second.first;
             int y = pq.top().second.second;
             pq.pop();
+            if (x == m-1 && y == n-1) return effort;
             if (effort > diff[x][y]) continue;
             for (int i = 0; i < 4; i++) {
                 int r = x + drow[i];
