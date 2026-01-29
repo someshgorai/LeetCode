@@ -14,7 +14,7 @@ public:
             int x = pq.top().second.first;
             int y = pq.top().second.second;
             pq.pop();
-            if (effort < diff[x][y]) continue;
+            if (effort > diff[x][y]) continue;
             for (int i = 0; i < 4; i++) {
                 int r = x + drow[i];
                 int c = y + dcol[i];
