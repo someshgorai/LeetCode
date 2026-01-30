@@ -22,7 +22,7 @@ public:
             int node = pq.top().second;
             pq.pop();
             if (spent > time[node]) continue;
-            
+            if (node == n-1) break;
             for (auto &[next, wt] : adjlist[node]) {
                 long long newDist = spent + wt;
                 if (newDist < time[next]) {
