@@ -1,7 +1,6 @@
 class Solution {
 public:
     char nextGreatestLetter(vector<char>& letters, char target) {
-        if (target > letters.back()) return letters.front();
         int n = letters.size();
         int low = 0;
         int high = n - 1;
