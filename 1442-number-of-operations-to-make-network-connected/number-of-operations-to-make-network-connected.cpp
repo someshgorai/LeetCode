@@ -13,8 +13,8 @@ public:
     }
 
     void unionBySize (int u, int v) {
-        int ultiParent_u = parent[u];
-        int ultiParent_v = parent[v];
+        int ultiParent_u = findUltimateParent(u);
+        int ultiParent_v = findUltimateParent(v);
         if (ultiParent_u == ultiParent_v) return;
         if (size[ultiParent_u] > size[ultiParent_v]) {
             parent[ultiParent_v] = ultiParent_u;
@@ -37,7 +37,7 @@ public:
         }
         int components = 0;
         for (int i = 0; i < n; i++) {
-            if (ds.parent[i] == i) components++;
+            if (ds.findUltimateParent(i) == i) components++;
         }
         if (extra >= components - 1) return components - 1;
         return -1;
