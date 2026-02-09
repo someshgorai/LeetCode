@@ -1,71 +1,57 @@
-class DisjointSet {
+//Greedy & Union Find
+class UnionFind {    
+    vector<int> root, rank;
 public:
-    vector<int> parent, size;
-
-    DisjointSet(int n) {
-        parent.resize(n);
-        size.resize(n, 1);
-        for (int i = 0; i < n; i++) parent[i] = i;
+    UnionFind(int n) : root(n), rank(n) {
+        rank.assign(n, 1);
+        iota(root.begin(), root.end(), 0);
     }
 
-    int findUltiParent(int node) {
-        if (parent[node] == node) return node;
-        return parent[node] = findUltiParent(parent[node]);
+    int Find(int x) {
+        return (x == root[x])?x:root[x]=Find(root[x]);
     }
 
-    void unionBySize(int u, int v) {
-        int up_u = findUltiParent(u);
-        int up_v = findUltiParent(v);
-
-        if (up_u == up_v) return;
-
-        if (size[up_u] < size[up_v]) {
-            parent[up_u] = up_v;
-            size[up_v] += size[up_u];
-        } else {
-            parent[up_v] = up_u;
-            size[up_u] += size[up_v];
-        }
+    void Union(int x, int y) {
+        x= Find(x), y= Find(y);
+        if (x == y)  return;
+        if (rank[x] > rank[y]) swap(x, y);   
+        root[x] = y;
+        if (rank[x]==rank[y]) rank[y]++;
     }
 };
 class Solution {
-private:
-    bool isValid(int row, int col, int n) {
-        return row >= 0 && row < n && col >= 0 && col < n;
-    }
 public:
+    using int3=tuple<int, int, int>; // (wt, v, w)
+    int n;
+    int to1D(int i, int j){
+        return i*n+j;
+    }
     int swimInWater(vector<vector<int>>& grid) {
-        int n = grid.size();
-        int drow[4] = {0, 1, 0, -1};
-        int dcol[4] = {1, 0, -1, 0};
-        set<pair<int, pair<int, int>>> queries;
-        for (int i=0; i<n; i++) {
-            for (int j=0; j<n; j++) {
-                queries.insert({grid[i][j], {i, j}});
-            }
-        }
-
-        DisjointSet ds(n * n);
-
-        vector<vector<bool>> vis(n, vector<bool>(n, false));
-        for (auto it = queries.begin(); it != queries.end(); ++it) {
-            int time = it->first;
-            int x = it->second.first;
-            int y = it->second.second;
-            int node1 = n * x + y;
-            vis[x][y] = true;
-            for (int i = 0; i<4
-            ; i++) {
-                int nrow = x + drow[i];
-                int ncol = y + dcol[i];
-                if (isValid(nrow, ncol, n) && vis[nrow][ncol]) {
-                    int node2 = nrow * n + ncol;
-                    ds.unionBySize(node1, node2);
+        n=grid.size();
+        if (n==1) return 0;// edge case
+        //Build edges (wt, v, w)
+        vector<int3> edges;
+        for(int i=0; i<n; i++){
+            for(int j=0; j<n; j++){
+                if (i<n-1){
+                    int wt=max(grid[i][j], grid[i+1][j]);
+                    edges.emplace_back(wt, to1D(i, j), to1D(i+1, j));
+                }
+                if (j<n-1){
+                    int wt=max(grid[i][j], grid[i][j+1]);
+                    edges.emplace_back(wt, to1D(i, j), to1D(i, j+1));
                 }
             }
-            if (ds.findUltiParent(0) == ds.findUltiParent(n*n - 1)) return time;
-
         }
-        return -1;
+        sort(edges.begin(), edges.end());
+        int V=n*n;
+        UnionFind uf(V);
+        for(auto& [wt, v, w]: edges){
+            if (uf.Find(v)!=uf.Find(w))
+                uf.Union(v, w);
+            if (uf.Find(0)==uf.Find(V-1))
+                return wt;
+        }
+        return 0;
     }
 };
