@@ -4,7 +4,7 @@ public:
         int n = nums.size();
         int len = 0;
         for (int left=0; left<n; left++) {
-            set<int> e, o;
+            unordered_set<int> e, o;
             int odd = 0, even = 0;
             for (int right=left; right<n; right++) {
                 if(nums[right] & 1 && o.count(nums[right]) == 0) {
