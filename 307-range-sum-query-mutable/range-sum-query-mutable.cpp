@@ -2,7 +2,7 @@ class NumArray {
 private:
     vector<int> segmentTree;
     int n;
-    void buildTree(int i, int left, int right, vector<int> & nums) {
+    void buildTree(int i, int left, int right, vector<int> &nums) {
         // Base Case
         if (left == right) {
             segmentTree[i] = nums[left];
@@ -38,12 +38,12 @@ private:
         if (start > r || end < l) return 0;
         else if (start <= l && end >= r) return segmentTree[i];
         int mid = (r-l)/2 + l;
-        sum += queries(start, end, 2*i+1, l, mid, sum) + queries(start, end, 2*i+2, mid+1, r, sum);
-        return sum;
+        return queries(start, end, 2*i+1, l, mid, sum) + queries(start, end, 2*i+2, mid+1, r, sum);
     }
 public:
     NumArray(vector<int>& nums) {
         n = nums.size();
+        if (n == 0) return; 
         segmentTree.resize(4*n);
         buildTree(0, 0, n-1, nums);
     }
