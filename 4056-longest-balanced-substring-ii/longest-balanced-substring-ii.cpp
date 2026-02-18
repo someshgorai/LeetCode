@@ -1,74 +1,85 @@
 class Solution {
-public:
-    int mono(const string& s){
-        if(s.empty()) return 0;
-        int cnt = 1;
-        int ans = 1;
-        for(int i = 1; i < (int)s.size(); i ++){
-            if(s[i] == s[i - 1]) cnt++;
-            else cnt = 1;
-            ans = max(ans, cnt);
-        }
-        return ans;
-    }
-
-    int duo(const string& s, char c1, char c2){
-        map<int, int> pos;
-        pos[0] = -1;
-        int ans = 0;
-        int delta = 0;
-        for(int i = 0; i < (int)s.size(); i ++){
-            if(s[i] != c1 && s[i] != c2){
-                pos.clear();
-                pos[0] = i;
-                delta = 0;
+private:
+    int helper(string s, char ch1, char ch2) {
+        int n = s.size();
+        int count1 = 0, count2 = 0;
+        int maxl = 0;
+        unordered_map<int, int> diffMap;
+        for (int i = 0; i < n; i++) {
+            if (s[i] != ch1 && s[i] != ch2) {
+                diffMap.clear();
+                count1 = 0;
+                count2 = 0;
                 continue;
             }
-            if(s[i] == c1){
-                delta++;
+
+            if (s[i] == ch1) {
+                count1++;
             }
-            else{
-                delta--;
+            if (s[i] == ch2) {
+                count2++;
             }
-            if(pos.find(delta) != pos.end()){
-                ans = max(ans, i - pos[delta]);
+
+            if (count1 == count2) {
+                maxl = max(maxl, count1 + count2);
             }
-            else{
-                pos[delta] = i;
+
+            int diff = count2 - count1;
+            if (diffMap.count(diff)) {
+                maxl = max(maxl, i - diffMap[diff]);
             }
-        }
-        return ans;
-    }
-
-    int trio(const string& s){
-        vector<int> cnt(3, 0);
-
-        map<vector<int>, int> pos;
-        pos[{0, 0}] = -1;
-
-        int ans = 0;
-
-        for(int i = 0; i < (int)s.size(); i++){
-            cnt[s[i] - 'a']++;
-
-            vector<int> key = {cnt[1] - cnt[0], cnt[2] - cnt[0]};
-
-            if(pos.find(key) != pos.end()){
-                ans = max(ans, i - pos[key]);
-            }
-            else{
-                pos[key] = i;
+            else {
+                diffMap[diff] = i;
             }
         }
-        return ans;
+        return maxl;
     }
+public:
     int longestBalanced(string s) {
-        return max({
-            mono(s),
-            duo(s, 'a', 'b'),
-            duo(s, 'a', 'c'),
-            duo(s, 'b', 'c'),
-            trio(s)
-        });
+        int n = s.size();
+
+        // Case 1
+        int count = 1, maxBalenced = 1;
+        for (int i = 1; i < n; i++) {
+            if (s[i] == s[i-1]) {
+                count++;
+            }
+            else {
+                maxBalenced = max(maxBalenced, count);
+                count = 1;
+            }
+        }
+        maxBalenced = max(maxBalenced, count);
+
+        // Case 2
+        maxBalenced = max(maxBalenced, helper(s, 'a', 'b'));
+        maxBalenced = max(maxBalenced, helper(s, 'c', 'b'));
+        maxBalenced = max(maxBalenced, helper(s, 'a', 'c'));
+
+        // Case 3
+        int countA = 0;
+        int countB = 0;
+        int countC = 0;
+        unordered_map<string, int> diffMap;
+        for (int i = 0; i < n; i++) {
+            if (s[i] == 'a') countA++;
+            if (s[i] == 'b') countB++;
+            if (s[i] == 'c') countC++;
+            
+            if (countA == countB && countA == countC) {
+                maxBalenced = max(maxBalenced, countA + countB + countC);
+            }
+
+            int diff1 = countA - countB;
+            int diff2 = countB - countC;
+            string key = to_string(diff1) + '_' + to_string(diff2);
+            if (diffMap.count(key)) {
+                maxBalenced = max(maxBalenced, i - diffMap[key]);
+            }
+            else {
+                diffMap[key] = i;
+            }
+        }
+        return maxBalenced;
     }
 };
