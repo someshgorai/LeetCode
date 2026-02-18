@@ -1,7 +1,7 @@
 class Solution {
 public:
     bool hasAlternatingBits(int n) {
-        int res = n ^ (n >> 1);
-        return ((long long)res & ((long long)res + 1)) == 0 ? true : false;
+        return (((long long)(n ^= (n >> 1))) & ((long long)n + 1)) == 0;
+
     }
 };
