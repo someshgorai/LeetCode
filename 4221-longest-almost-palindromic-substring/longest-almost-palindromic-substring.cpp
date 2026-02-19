@@ -1,25 +1,52 @@
 class Solution {
 private:
-    int backtrack(string &s, int i, int j, vector<vector<int>> &dp) {
-        if (i > j) return 0;
-        if (dp[i][j] != -1) return dp[i][j];
-        if (s[i] == s[j]) return dp[i][j] = backtrack(s, i+1, j-1, dp);
+    int palindromicLen(int left, int right, int n, string s) {
+        int maxi = 0;
+        while (left >= 0 && right < n) {
+            if (s[left] == s[right]) {
+                left--;
+                right++;
+            }
+            else break;
+        }
+        maxi = right - left - 1;
 
-        return dp[i][j] = 1 + min(backtrack(s, i+1, j, dp), backtrack(s, i, j-1, dp));
+        if (maxi == n) return n ;
+
+        int left1 = left - 1;
+        int right1 = right;
+        while (left1 >= 0 && right1 < n) {
+            if (s[left1] == s[right1]) {
+                left1--;
+                right1++;
+            }
+            else break;
+        }
+        maxi = max(maxi, right1 - left1 - 1);
+
+        int left2 = left;
+        int right2 = right + 1;
+        while (left2 >= 0 && right2 < n) {
+            if (s[left2] == s[right2]) {
+                left2--;
+                right2++;
+            }
+            else break;
+        }
+        maxi = max(maxi, right2 - left2 - 1);
+
+        return maxi;
     }
 public:
     int almostPalindromic(string s) {
-        int n = s.size();
-        int maxPalin = 2;
-        vector<vector<int>> dp(n, vector<int> (n, -1));
-        for (int i = 0; i < n-1; i++) {
-            for (int j = i+1; j < n; j++) {
-                int len = j - i + 1;
-                if (len > 1 && backtrack(s, i, j, dp) <= 1) {
-                    maxPalin = max(len, maxPalin);
-                }
-            }
+        int n=s.size();
+        int maxlen = 0;
+        for (int i = 0; i < n; i++) {
+            // Even Center
+            maxlen = max(maxlen, palindromicLen(i, i+1, n, s));
+            // Odd Center
+            maxlen = max(maxlen, palindromicLen(i, i, n, s));
         }
-        return maxPalin;
+        return maxlen;
     }
 };
