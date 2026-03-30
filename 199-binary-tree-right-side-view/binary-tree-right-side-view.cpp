@@ -10,33 +10,20 @@
  * };
  */
 class Solution {
+private:
+    void rightView(TreeNode* node, vector<int> &order, int level) {
+        if (level == order.size()) order.push_back(node->val);
+
+        if (node->right) rightView(node->right, order, level + 1);
+        if (node->left)  rightView(node->left, order, level + 1);
+    }
 public:
     vector<int> rightSideView(TreeNode* root) {
-        queue<pair<TreeNode*, int>> vis;
-        map<int, int> order;
+        vector<int> order;
+        if (!root) return order;
 
-        if (!root) return {};
+        rightView(root, order, 0);
 
-        vis.push({root, 0});
-
-        while (!vis.empty()) {
-            auto point = vis.front();
-            vis.pop();
-
-            TreeNode* node = point.first;
-            int level = point.second; 
-
-            order[level] = node->val;
-
-            if (node->left)  vis.push({node->left, level + 1});
-            if (node->right) vis.push({node->right, level + 1});
-        }
-
-        vector<int> rightOrder;
-        for (auto p : order) {
-            rightOrder.push_back(p.second);
-        }
-
-        return rightOrder;
+        return order;
     }
 };
