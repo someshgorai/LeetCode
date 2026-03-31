@@ -9,36 +9,22 @@
  */
 class Solution {
 private:
-    bool ancestors(TreeNode* node, TreeNode* x, vector<TreeNode*> &parents) {
-        parents.push_back(node);
-        
-        if (node->val == x->val) return true;
+    TreeNode* ancestors(TreeNode* node, TreeNode* x, TreeNode* y) {
+        if (!node) return nullptr;
+        if (node == x) return x;
+        if (node == y) return y;
 
-        if (node->left && ancestors(node->left, x, parents)) return true;
-        
-        if (node->right && ancestors(node->right, x, parents)) return true;
-        
-        parents.pop_back();
+        TreeNode* cond1 = ancestors(node->left, x, y);
+        TreeNode* cond2 = ancestors(node->right, x, y);
 
-        return false;
+        if (cond1 && cond2)  return node;
+        if (cond1 && !cond2) return cond1;
+        if (!cond1 && cond2) return cond2;
+
+        return nullptr;
     }
 public:
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-        vector<TreeNode*> p_ancestor, q_ancestor;
-        ancestors(root, p, p_ancestor);
-        ancestors(root, q, q_ancestor);
-
-        TreeNode* commAnces;
-        auto it1 = p_ancestor.begin();
-        auto it2 = q_ancestor.begin();
-
-        while (it1 != p_ancestor.end() && it2 != q_ancestor.end()) {
-            if (*it1 == *it2) commAnces = *it1;
-            else break;
-            it1++;
-            it2++;
-        }
-
-        return commAnces;
+        return ancestors(root, p, q);
     }
 };
