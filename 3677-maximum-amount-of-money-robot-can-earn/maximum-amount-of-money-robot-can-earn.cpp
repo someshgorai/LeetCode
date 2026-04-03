@@ -37,14 +37,14 @@ public:
     int maximumAmount(vector<vector<int>>& coins) {
         int m = coins.size();
         int n = coins[0].size();
-        vector<vector<vector<int>>> dp(m + 1, vector<vector<int>>(n + 1, vector<int>(3, -1e9)));
+        vector<vector<vector<int>>> dp(1, vector<vector<int>>(n + 1, vector<int>(3, -1e9)));
         
-        dp[m-1][n-1][0] = coins[m-1][n-1];
+        dp[0][n-1][0] = coins[m-1][n-1];
         if (coins[m-1][n-1] < 0) {
-            dp[m-1][n-1][1] = dp[m-1][n-1][2] = 0;
+            dp[0][n-1][1] = dp[0][n-1][2] = 0;
         }
         else {
-            dp[m-1][n-1][1] = dp[m-1][n-1][2] = coins[m-1][n-1];
+            dp[0][n-1][1] = dp[0][n-1][2] = coins[m-1][n-1];
         }
 
         for (int i = m-1; i >= 0; i--) {
@@ -54,8 +54,8 @@ public:
                     int val = coins[i][j];
 
                     // move options
-                    int right = dp[i][j+1][life];
-                    int down  = dp[i+1][j][life];
+                    int right = dp[0][j+1][life];
+                    int down  = dp[0][j][life];
 
                     int bestNext = max(right, down);
 
@@ -65,12 +65,12 @@ public:
                     // Option 2: skip negative (if allowed)
                     int skip = -1e9;
                     if (val < 0 && life > 0) {
-                        int r = dp[i][j+1][life-1];
-                        int d = dp[i+1][j][life-1];
+                        int r = dp[0][j+1][life-1];
+                        int d = dp[0][j][life-1];
                         skip = max(r, d);
                     }
 
-                    dp[i][j][life] = max(take, skip);
+                    dp[0][j][life] = max(take, skip);
                 }
             }
         }
