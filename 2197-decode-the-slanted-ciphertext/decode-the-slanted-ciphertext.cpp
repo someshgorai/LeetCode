@@ -1,6 +1,7 @@
 class Solution {
 public:
     string decodeCiphertext(string encodedText, int rows) {
+        if (rows == 1) return encodedText;
         string decodedText = "";
         int len  = encodedText.size();
         int cols = len / rows;
