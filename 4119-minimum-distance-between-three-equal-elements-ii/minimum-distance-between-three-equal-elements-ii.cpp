@@ -1,23 +1,29 @@
 class Solution {
 public:
     int minimumDistance(vector<int>& nums) {
-        unordered_map<int, vector<int>> indices;
-        int n = nums.size();
-        for (int i = 0; i < n; i++) {
-            indices[nums[i]].push_back(i);
-        }
+        unordered_map<int, pair<int,int>> lastTwo; 
+        // {prev2, prev1}
 
         int minDist = 1e9;
-        for (auto &[k, pos] : indices) {
-            int m = pos.size();
-            if (m >= 3) {
-                for (int i = 0; i < m - 2; i++) {
-                    minDist = min(minDist, 2 * (pos[i+2] - pos[i]));
+
+        for (int i = 0; i < nums.size(); i++) {
+            int x = nums[i];
+
+            if (lastTwo.count(x)) {
+                auto &[prev2, prev1] = lastTwo[x];
+
+                if (prev2 != -1) {
+                    minDist = min(minDist, 2 * (i - prev2));
                 }
+
+                // shift
+                prev2 = prev1;
+                prev1 = i;
+            } else {
+                lastTwo[x] = {-1, i};
             }
         }
-        
-        if (minDist == 1e9) return -1;
-        return minDist;
+
+        return (minDist == 1e9) ? -1 : minDist;
     }
 };
