@@ -1,57 +1,71 @@
 class Solution {
-    const int mod = 1e9 + 7;
-    using ll = long long;
-    int pow(ll x, ll y) {
-        ll res = 1;
-        for (; y; y >>= 1) {
-            if (y & 1) {
-                res = res * x % mod;
-            }
-            x = x * x % mod;
+long long MOD = 1e9+7;
+private:
+    long long power(long long a, long long b) {
+        if (b == 0) {
+            return 1;
         }
-        return res;
-    }
 
+        long long half = power(a, b/2);
+        long long result = (1LL * half * half) % MOD;
+
+        if (b & 1) {
+            result = (1LL * result * a) % MOD;
+        }
+
+        return result;
+    }
 public:
     int xorAfterQueries(vector<int>& nums, vector<vector<int>>& queries) {
         int n = nums.size();
-        int T = sqrt(n);
-        vector<vector<vector<int>>> groups(T);
-        for (auto& q : queries) {
-            int l = q[0], r = q[1], k = q[2], v = q[3];
-            if (k < T) {
-                groups[k].push_back({l, r, v});
-            } else {
+        int blockSize = ceil(sqrt(n));
+        unordered_map<int, vector<vector<int>>> smallKMap;
+        vector<int> res = nums;
+
+        for (auto &q : queries) {
+            int l = q[0];
+            int r = q[1];
+            int k = q[2];
+            int v = q[3];
+            if (k >= blockSize) {
                 for (int i = l; i <= r; i += k) {
-                    nums[i] = 1ll * nums[i] * v % mod;
+                    res[i] = (1LL * res[i] * v) % MOD;
                 }
             }
+            else {
+                smallKMap[k].push_back(q);
+            }
         }
 
-        vector<ll> dif(n + T);
-        for (int k = 1; k < T; k++) {
-            if (groups[k].empty()) {
-                continue;
-            }
-            fill(dif.begin(), dif.end(), 1);
-            for (auto& q : groups[k]) {
-                int l = q[0], r = q[1], v = q[2];
-                dif[l] = dif[l] * v % mod;
-                int R = ((r - l) / k + 1) * k + l;
-                dif[R] = dif[R] * pow(v, mod - 2) % mod;
+        for (auto &[k, queries] : smallKMap) {
+            vector<int> diff(n, 1);
+            for (auto &q : queries) {
+                int l = q[0];
+                int r = q[1];
+                int v = q[3];
+
+                diff[l] = (1LL *diff[l] * v) % MOD;
+
+                int steps = (r - l)/k;
+                int next  = l + (steps+1) * k;
+
+                if (next < n) diff[next] = (1LL * diff[next] * power(v, MOD-2)) % MOD; 
             }
 
-            for (int i = k; i < n; i++) {
-                dif[i] = dif[i] * dif[i - k] % mod;
-            }
+            // Cummulative Product
             for (int i = 0; i < n; i++) {
-                nums[i] = 1ll * nums[i] * dif[i] % mod;
+                if (i >= k) diff[i] = (1LL * diff[i] * diff[i-k]) % MOD;
+            }
+
+            for (int i = 0; i < n; i++) {
+                res[i] = (1LL * diff[i] * res[i]) % MOD;
             }
         }
-        int res = 0;
-        for (int i = 0; i < n; i++) {
-            res = res ^ nums[i];
+
+        int ans = res[0];
+        for (int i = 1; i < n; i++) {
+            ans ^= res[i];
         }
-        return res;
+        return ans;
     }
 };
