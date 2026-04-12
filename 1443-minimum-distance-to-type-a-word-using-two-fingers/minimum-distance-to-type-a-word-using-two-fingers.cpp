@@ -1,12 +1,15 @@
 class Solution {
 private:
     int dp[301][27][27];
+
     pair<int, int> getCoordinate(int c) {
         return {c % 6, c / 6};
     }
+
     int getDistance(int x1, int y1, int x2, int y2) {
         return abs(x1 - x2) + abs(y1 - y2);
     }
+    
     int solve(string &word, int n, int i, int c1, int c2) {
         if (i >= n) return 0;
 
