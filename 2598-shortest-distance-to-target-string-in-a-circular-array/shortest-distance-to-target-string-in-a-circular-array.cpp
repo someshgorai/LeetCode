@@ -2,7 +2,7 @@ class Solution {
 public:
     int closestTarget(vector<string>& words, string target, int startIndex) {
         int n = words.size();
-        int shortestDistance = 1e4;
+        int shortestDistance = 101;
 
         for (int i = 0; i < n; i++) {
             if (words[i] == target) {
@@ -11,6 +11,6 @@ public:
             }
         }
 
-        return shortestDistance==1e4 ? -1 : shortestDistance;
+        return shortestDistance==101 ? -1 : shortestDistance;
     }
 };
