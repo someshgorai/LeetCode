@@ -6,10 +6,10 @@ public:
         int i = n1 - 1, j = n2 - 1;
         int maxdist = 0;
         while (i >= 0 && j >= 0) {
-            if (nums1[i] > nums2[j]) {
+            while (j >= 0 && nums1[i] > nums2[j]) {
                 j--;
             }
-            else {
+            if (j >= 0) {
                 maxdist = max(maxdist, j - i);
                 i--;
             }
