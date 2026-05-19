@@ -1,37 +1,43 @@
 class Solution {
 public:
     int minJumps(vector<int>& arr) {
-        int n=arr.size();
-        if(n==1)return 0;
-        unordered_map<int,vector<int>>mp;
-        for (int i=0;i<n;i++){
-            mp[arr[i]].push_back(i);
+        int n = arr.size();
+        unordered_map<int, vector<int>> mpp;
+
+        for (int i = 0; i < n; i++) {
+            mpp[arr[i]].push_back(i);
         }
-        queue<pair<int,int>>q;
-        q.push({0,0});
-        vector<int>vis(n,0);
-        vis[0]=1;
-        while(!q.empty()){
-            int node=q.front().first;
-            int dist=q.front().second;
+
+        queue<pair<int,int>> q; // node, jumps
+        vector<bool> visited(n, false);
+        q.emplace(n-1, 0);
+        visited[n-1] = true;
+
+        while(!q.empty()) {
+            auto [idx, jumps] = q.front();
+            if (idx == 0) return jumps;
             q.pop();
-            if(node==n-1)return dist;
-            if(node-1>=0 && !vis[node-1]){
-                vis[node-1]=1;
-                q.push({node-1,dist+1});
+
+            if (idx + 1 < n && visited[idx+1] == false) {
+                q.emplace(idx + 1, jumps + 1);
+                visited[idx+1] = true;
             }
-            if(node+1<n && !vis[node+1]){
-                vis[node+1]=1;
-                q.push({node+1,dist+1});
+
+            if (idx - 1 >= 0 && visited[idx-1] == false) {
+                q.emplace(idx - 1, jumps + 1);
+                visited[idx-1] = true;
             }
-            for (int next:mp[arr[node]]){
-                if (!vis[next]){
-                    vis[next]=1;
-                    q.push({next,dist+1});
+
+            for (int i : mpp[arr[idx]]) {
+                if (i == idx) continue;
+                if (visited[i] == false) {
+                    q.emplace(i, jumps+1);
+                    visited[i] = true;
                 }
             }
-            mp[arr[node]].clear();
+            mpp[arr[idx]].clear();
         }
-        return -1;
+
+        return 1;
     }
 };
