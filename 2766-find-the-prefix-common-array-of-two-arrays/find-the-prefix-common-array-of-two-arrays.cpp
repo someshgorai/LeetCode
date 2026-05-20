@@ -3,19 +3,16 @@ public:
     vector<int> findThePrefixCommonArray(vector<int>& A, vector<int>& B) {
         int n = A.size();
         vector<int> vis(n+1, 0), C(n);
+        int common = 0;
 
-        for (int i = 0; i < n; i++) {
-            int cnt = 0;
-            if (vis[A[i]] == 0) vis[A[i]]++;
-            else cnt++;
+        for (int i = 0; i < n; i++) {          
+            vis[A[i]]++;
+            if (vis[A[i]] == 2) common++;
 
-            if (vis[B[i]] == 0) vis[B[i]]++;
-            else cnt++;
+            vis[B[i]]++;
+            if (vis[B[i]] == 2) common++;
 
-            if (A[i] == B[i]) cnt = 1;
-
-            if (i > 0) C[i] = C[i-1] + cnt++;
-            else C[i] = cnt;
+            C[i] = common;
         }
 
         return C;
