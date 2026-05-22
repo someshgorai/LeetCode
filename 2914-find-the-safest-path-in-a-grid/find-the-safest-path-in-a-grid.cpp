@@ -52,9 +52,18 @@ public:
                         abs(thief.second));
         }
 
-        for (int i = 1; i <= 2*(n-1); i++) {
+        int low = 0, high = 2*(n-1);
+
+        while (low <= high) {
+            int mid = (high - low)/2 + low;
             vector<vector<bool>> vis(n, vector<bool>(n, false));
-            if (startSF >= i && isPathPossible(grid, st, i, 0 , 0, n, vis)) maxSF = max(maxSF, i);
+            if (startSF >= mid && isPathPossible(grid, st, mid, 0 , 0, n, vis)) {
+                maxSF = max(maxSF, mid);
+                low = mid + 1;
+            }
+            else {
+                high = mid - 1;
+            }
         }
 
         return maxSF;
