@@ -14,18 +14,19 @@ public:
         int low = 0, high = *max_element(citations.begin(), citations.end());
         int maxHIndex = 0;
 
-        for (int  i = low; i <= high; i++) {
-            int cited = getCitedPapers(citations, i);
+        while (low <= high) {
+            int mid = (high - low)/2 + low;
+            int cited = getCitedPapers(citations, mid);
             cout << cited;
 
-            if (cited >= i) {
-                maxHIndex = max(maxHIndex, i);
+            if (cited >= mid) {
+                low = mid + 1;
             }
             else {
-                break;
+                high = mid - 1;
             }
         }
 
-        return maxHIndex;
+        return high;
     }
 };
