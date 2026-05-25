@@ -23,11 +23,35 @@ private:
 public:
     int maxJumps(vector<int>& arr, int d) {
         int n = arr.size();
-        vector<int> dp(n, -1);
+        vector<int> dp(n, 0);
+
+        set<pair<int, int>> locus;
+        for (int i = 0; i < n; i++) {
+            locus.insert({arr[i], i});
+        }
         
         int maxTowers = 0;
-        for (int i = 0; i < n; i++) {
-            maxTowers = max(maxTowers, getJumps(i, arr, d, n, dp));
+        for (auto it : locus) {
+            auto [height, idx] = it;
+
+            int towers = 1;
+            for (int x = 1; x <= d; x++) {
+                if (idx + x < n && arr[idx] > arr[idx + x]) {
+                    towers = max(towers, 1+ dp[idx+x]);
+                }
+                else break;
+            }
+
+            for (int x = 1; x <= d; x++) {
+                if (idx - x >= 0 && arr[idx] > arr[idx - x]) {
+                    towers = max(towers, 1+ dp[idx-x]);
+                }
+                else break;
+            }
+
+            dp[idx] = towers;
+
+            maxTowers = max(maxTowers, towers);
         }
 
         return maxTowers;
