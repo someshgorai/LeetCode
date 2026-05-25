@@ -25,11 +25,14 @@ public:
         int n = arr.size();
         vector<int> dp(n, 0);
 
-        set<pair<int, int>> locus;
+        vector<pair<int, int>> locus;
+
         for (int i = 0; i < n; i++) {
-            locus.insert({arr[i], i});
+            locus.push_back({arr[i], i});
         }
         
+        sort(locus.begin(), locus.end());
+
         int maxTowers = 0;
         for (auto it : locus) {
             auto [height, idx] = it;
