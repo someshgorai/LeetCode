@@ -22,18 +22,12 @@ private:
     }
 public:
     int maxJumps(vector<int>& arr, int d) {
-        set<pair<int, int>> hash;
         int n = arr.size();
-
-        for (int i = 0; i < n; i++) {
-            hash.insert({arr[i], i});
-        }
-
         vector<int> dp(n, -1);
+        
         int maxTowers = 0;
-        for (auto it : hash) {
-            auto [height, start] = it;
-            maxTowers = max(maxTowers, getJumps(start, arr, d, n, dp));
+        for (int i = 0; i < n; i++) {
+            maxTowers = max(maxTowers, getJumps(i, arr, d, n, dp));
         }
 
         return maxTowers;
