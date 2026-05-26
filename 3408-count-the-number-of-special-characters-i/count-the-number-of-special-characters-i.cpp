@@ -1,20 +1,17 @@
 class Solution {
 public:
     int numberOfSpecialChars(string word) {
-        vector<bool> freq(256, false);
+        int lower = 0;
+        int upper = 0;
         for (char c : word) {
-            if (isupper(c)) {
-                freq[c] = true;
+            if (islower(c)) {
+                lower |= (1 << (c - 'a'));
             }
             else {
-                freq[c] = true;
+                upper |= (1 << (c - 'A'));
             }
         }
-
-        int cnt = 0;
-        for (int i = 0; i < 26; i++) {
-            if (freq['a' + i] && freq['A' + i]) cnt++;
-        }
-        return cnt;
+        int common = lower & upper;
+        return __builtin_popcount(common);
     }
 };
