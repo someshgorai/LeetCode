@@ -11,36 +11,20 @@ public:
     ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
         ListNode* head1 = headA;
         ListNode* head2 = headB;
+        bool switch1 = true, switch2 = true;
 
         while (head1 != nullptr && head2 != nullptr) {
             if (head1 == head2) return head1;
             head1 = head1->next;
             head2 = head2->next;
-        }
-
-        if (head1 == head2) return nullptr;
-
-        if (head1 == nullptr) {
-            head1 = headB;
-            while (head2 != nullptr) {
-                head2 = head2->next;
-                head1 = head1->next;
+            if (!head1 && switch1) {
+                head1 = headB;
+                switch1 = false;
             }
-            head2 = headA;
-        }
-        else {
-            head2 = headA;
-            while (head1 != nullptr) {
-                head2 = head2->next;
-                head1 = head1->next;
+            if (!head2 && switch2) {
+                head2 = headA;
+                switch2 = false;
             }
-            head1 = headB;
-        }
-
-        while (head1 != nullptr && head2 != nullptr) {
-            if (head1 == head2) return head1;
-            head1 = head1->next;
-            head2 = head2->next;
         }
         
         return nullptr;
