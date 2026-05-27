@@ -22,6 +22,8 @@ public:
 
         int rot = k % cnt;
 
+        if (rot == 0) return head;
+
         temp = head;
         while (rot) {
             rot--;
