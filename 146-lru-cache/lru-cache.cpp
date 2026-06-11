@@ -49,7 +49,7 @@ public:
             m.erase(key);
             deleteNode(existingNode);
         }
-        if (m.size() == cap) {
+        else if (m.size() == cap) {
             m.erase(tail->prev->key);
             deleteNode(tail->prev);
         }
