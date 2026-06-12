@@ -1,44 +1,46 @@
 class Solution {
 public:
     int orangesRotting(vector<vector<int>>& grid) {
-        int n = grid.size(), m = grid[0].size();
-        vector<vector<int>> vis(n, vector<int> (m, 0));
-        int cntFresh = 0;
-        queue<pair<pair<int, int>, int>> q;
-        for(int i=0; i<n; i++) {
-            for (int j=0; j<m; j++) {
+        int n = grid[0].size(), m = grid.size();
+        vector<vector<bool>> vis(m, vector<bool> (n, false));
+        queue<pair<int, int>> q;
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
                 if (grid[i][j] == 2) {
-                    q.push({{i, j}, 0});
-                    vis[i][j] = 2;
-                }
-                else if (grid[i][j] == 1) {
-                    cntFresh++;
+                    q.emplace(i, j);
+                    vis[i][j] = true;
                 }
             }
         }
 
         int drow[] = {1, 0, -1, 0};
-        int dcol[] = {0, 1, 0, -1};
+        int dcol[] = {0, -1, 0, 1};
         int time = 0;
         while (!q.empty()) {
-            auto it = q.front();
-            q.pop();
-            int r = it.first.first;
-            int c = it.first.second;
-            int t = it.second;
-            time = max(time, t);
-            for (int i=0; i<4; i++) {
-                int nrow = r + drow[i];
-                int ncol = c + dcol[i];
-                if (nrow >= 0 && ncol >= 0 && nrow < n && ncol < m && vis[nrow][ncol] == 0 && grid[nrow][ncol] == 1) {
-                    q.push({{nrow, ncol}, t+1});
-                    vis[nrow][ncol] = 2;
-                    cntFresh--;
+            int limit = q.size();
+
+            while (limit--) {
+                auto [x, y] = q.front();
+                q.pop();
+                for (int i = 0; i < 4; i++) {
+                    int r = x + drow[i];
+                    int c = y + dcol[i];
+                    if (r >= 0 && c >= 0 && r < m && c < n && grid[r][c] == 1 && !vis[r][c]) {
+                        q.emplace(r, c);
+                        vis[r][c] = true;
+                    }
                 }
+            }
+            if (!q.empty())time++;
+        }
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] && !vis[i][j]) return -1;
             }
         }
 
-        if (cntFresh > 0) return -1;
         return time;
     }
 };
