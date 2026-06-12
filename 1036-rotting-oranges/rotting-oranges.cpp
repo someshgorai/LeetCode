@@ -4,12 +4,16 @@ public:
         int n = grid[0].size(), m = grid.size();
         vector<vector<bool>> vis(m, vector<bool> (n, false));
         queue<pair<int, int>> q;
+        int cntFresh = 0;
 
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 if (grid[i][j] == 2) {
                     q.emplace(i, j);
                     vis[i][j] = true;
+                }
+                else if (grid[i][j] == 1) {
+                    cntFresh++;
                 }
             }
         }
@@ -29,18 +33,14 @@ public:
                     if (r >= 0 && c >= 0 && r < m && c < n && grid[r][c] == 1 && !vis[r][c]) {
                         q.emplace(r, c);
                         vis[r][c] = true;
+                        cntFresh--;
                     }
                 }
             }
             if (!q.empty())time++;
         }
 
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                if (grid[i][j] && !vis[i][j]) return -1;
-            }
-        }
-
+        if (cntFresh) return -1;
         return time;
     }
 };
