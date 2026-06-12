@@ -1,6 +1,13 @@
 class Solution {
 private:
     int mod = 1e9+7;
+    long long power(int base, int expo) {
+        if (expo == 0) return 1;
+        long long half = power(base, expo/2);
+        long res = (half * half)%mod;
+        if (expo & 1) res = (res * base)%mod;
+        return res;
+    }
     int getMaxDepth(int node, vector<int> adj[], int parent) {
         int maxDepth = 0;
 
@@ -22,11 +29,7 @@ public:
         }
         
         int maxDepth = getMaxDepth(1, adj, -1);
-        int totalWays = 1;
-        cout << maxDepth;
-        for (int i = 0; i < maxDepth-1; i++) {
-            totalWays = (totalWays << 1)%mod; 
-        }
+        int totalWays = (int) power(2, maxDepth-1);
         return totalWays;
     }
 };
