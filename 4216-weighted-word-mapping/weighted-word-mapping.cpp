@@ -8,7 +8,7 @@ public:
                 res += weights[c - 'a'];
             }
             res = res%26;
-            ans += 'a' + 25 - res;
+            ans += 'z' - res;
         }
         return ans;   
     }
