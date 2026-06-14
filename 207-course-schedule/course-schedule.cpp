@@ -1,45 +1,58 @@
 class Solution {
 private:
-    bool isCyclic(int node,
-                  vector<vector<int>>& graph,
-                  vector<bool>& vis,
-                  vector<bool>& pathVis) {
-
+    void toposort(int node, vector<vector<int>> &dirGraph, vector<bool> &vis, int &count) {
+        queue<int> q;
+        q.push(node);
         vis[node] = true;
-        pathVis[node] = true;
 
-        for (int neigh : graph[node]) {
-            if (!vis[neigh]) {
-                if (isCyclic(neigh, graph, vis, pathVis))
-                    return true;
-            }
-            else if (pathVis[neigh]) {
-                return true; // back edge found
+        while (!q.empty()) {
+            int node = q.front();
+            count++;
+            q.pop();
+
+            for (int neigh : dirGraph[node]) {
+                if (!vis[neigh]) {
+                    q.push(neigh);
+                    vis[neigh] = true;
+                }
+
             }
         }
-
-        pathVis[node] = false;
-        return false;
     }
-
 public:
     bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
-        vector<vector<int>> graph(numCourses);
-
-        for (auto &pre : prerequisites) {
-            graph[pre[1]].push_back(pre[0]);
+        vector<vector<int>> dirGraph(numCourses);
+        vector<int> indegree(numCourses, 0);
+        for (auto pre : prerequisites) {
+            dirGraph[pre[1]].push_back(pre[0]);
+            indegree[pre[0]]++;
         }
-
+        
+        int count = 0;
         vector<bool> vis(numCourses, false);
-        vector<bool> pathVis(numCourses, false);
-
+        queue<int> q;
         for (int i = 0; i < numCourses; i++) {
-            if (!vis[i]) {
-                if (isCyclic(i, graph, vis, pathVis))
-                    return false;
+            if (indegree[i] == 0) {
+                q.push(i);
+                vis[i] = true;
             }
         }
 
-        return true;
+        while (!q.empty()) {
+            int node = q.front();
+            count++;
+            q.pop();
+
+            for (int neigh : dirGraph[node]) {
+                indegree[neigh]--;
+                if (indegree[neigh] == 0){
+                    q.push(neigh);
+                    vis[neigh];
+                }
+            }
+        }
+
+        if (count == numCourses) return true;
+        return false;
     }
 };
