@@ -9,21 +9,39 @@
  * };
  */
 class Solution {
+    ListNode* reverse(ListNode* node) {
+        ListNode* prev = nullptr;
+        ListNode* curr = node;
+
+        while (curr) {
+            ListNode* front = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = front;
+        }
+
+        return prev;
+    }
 public:
     int pairSum(ListNode* head) {
-        vector<int> values;
-
-        ListNode* temp = head;
-        while(temp) {
-            values.push_back(temp->val);
-            temp = temp->next;
+        ListNode* slow = head;
+        ListNode* fast = head;
+        while (fast && fast->next) {
+            fast = fast->next->next;
+            slow = slow->next;
         }
+
+        ListNode* temp2 = reverse(slow);
+        ListNode* temp1 = head;
 
         int maxTwinSum = 0;
-        int n = values.size();
-        for (int i = 0; i < n/2; i++) {
-            maxTwinSum = max(maxTwinSum, values[i] + values[n-1-i]);
+        while (temp1 && temp2) {
+            maxTwinSum = max(maxTwinSum, temp1->val+ temp2->val);
+            temp1 = temp1->next;
+            temp2 = temp2->next;
         }
+
+        reverse(slow);
 
         return maxTwinSum;
     }
