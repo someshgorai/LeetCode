@@ -14,9 +14,10 @@ public:
         return parent[node] = findUltiParent(parent[node]);
     }
 
-    void unionBySize(int u, int v) {
+    bool unionBySize(int u, int v) {
         int ultiParent_u = findUltiParent(u);
         int ultiParent_v = findUltiParent(v);
+        if (ultiParent_u == ultiParent_v) return false;
         if (size[ultiParent_u] >= size[ultiParent_v]) {
             parent[ultiParent_v] = ultiParent_u;
             size[ultiParent_u] += size[ultiParent_v];
@@ -25,6 +26,7 @@ public:
             parent[ultiParent_u] = ultiParent_v;
             size[ultiParent_v] += size[ultiParent_u];
         }
+        return true;
     }
 };
 class Solution {
@@ -37,10 +39,7 @@ public:
         for (auto edge : edges) {
             int u = edge[0];
             int v = edge[1];
-            if (ds.findUltiParent(u) != ds.findUltiParent(v)) {
-                ds.unionBySize(u, v);
-            }
-            else {
+            if (!ds.unionBySize(u, v)){
                 extraEdge = edge;
             }
         }
