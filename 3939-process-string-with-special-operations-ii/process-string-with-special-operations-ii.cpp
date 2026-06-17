@@ -15,26 +15,23 @@ public:
                 len++;
             }
         }
-        if (k + 1 > len) {
+        if (k >= len) {
             return '.';
         }
         for (int i = s.size() - 1; i >= 0; i--) {
             if (s[i] == '*') {
                 len++;
             } else if (s[i] == '#') {
-                if (k + 1 > (len + 1) / 2) {
+                if (k >= len / 2) {
                     k -= len / 2;
                 }
                 len = (len + 1) / 2;
             } else if (s[i] == '%') {
                 k = len - k - 1;
             } else {
-                if (k + 1 == len) {
-                    return s[i];
-                } else {
-                    len--;
-                }
+                len--;
             }
+            if (len == k) return s[i];
         }
         return '.';
     }
