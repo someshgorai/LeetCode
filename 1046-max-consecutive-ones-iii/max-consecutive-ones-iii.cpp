@@ -9,7 +9,7 @@ public:
                 if (nums[l] == 0) zeros--;
                 l++;
             }
-            maxLen = max(maxLen, r - l + 1);
+            if (zeros <= k) maxLen = max(maxLen, r - l + 1);
             r++;
         }
         return maxLen;
