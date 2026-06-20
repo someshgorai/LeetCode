@@ -10,18 +10,13 @@ public:
             }
         }
         if (breakPoint != -1) {
-            int next = INT_MAX;
-            int nextIdx;
-            for (int i = breakPoint+1; i < n; i++) {
-                if (nums[breakPoint] < nums[i] && next > nums[i]) {
-                    nextIdx = i;
-                    next = nums[i];
+            for (int i = n-1; i > breakPoint; i--) {
+                if (nums[breakPoint] < nums[i]) {
+                    swap(nums[breakPoint], nums[i]);
+                    break;
                 }
             }
-            swap(nums[breakPoint], nums[nextIdx]);
-            sort(nums.begin() + breakPoint + 1, nums.end());
         }
-        else reverse(nums.begin(), nums.end());
-        
+        reverse(nums.begin() + breakPoint + 1, nums.end());
     }
 };
