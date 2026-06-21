@@ -11,10 +11,10 @@ public:
         priority_queue<T, vector<T>, greater<T>> pq;
 
         costs[0][1] = 0;
-        pq.push({0, 0, 1});
+        pq.push({0, 1, 0});
 
         while(!pq.empty()) {
-            auto [cost, node, cons] = pq.top();
+            auto [cost, cons, node] = pq.top();
             pq.pop();
 
             if (cost > costs[node][cons]) continue;
@@ -34,7 +34,7 @@ public:
                 long long nd = cost + next.second;
                 if (nd < costs[next.first][newCons]) {
                     costs[next.first][newCons] = nd;
-                    pq.push({nd, next.first, newCons});
+                    pq.push({nd, newCons, next.first});
                 }
             }
         }
