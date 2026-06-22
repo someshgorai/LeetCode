@@ -11,9 +11,10 @@ public:
         int count = 0;
         for (int i = 0; i <= n; i++) {
             if (freq[i] == 0) continue;
-            int c = min (freq[i], coins/i);
-            coins = coins - c * i;
-            count += c;
+            int canBuy = min (freq[i], coins/i);
+            if (!canBuy) return count;
+            coins = coins - canBuy * i;
+            count += canBuy;
         }
 
         return count;
