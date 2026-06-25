@@ -1,15 +1,14 @@
 class Solution {
 public:
     int singleNumber(vector<int>& nums) {
-        int ans = 0;
+        int n = nums.size();
+        sort(nums.begin(), nums.end());
 
-        for (int i = 0; i < 32; i++) {
-            int cnt = 0;
-            for (int n : nums) {
-                if ((n >> i) & 1) cnt++;
-            }
-            if (cnt % 3) ans = ans | (1 << i);
+        if (n == 1) return nums[0];
+
+        for (int i = 1; i < n; i += 3) {
+            if (nums[i-1] != nums[i]) return nums[i-1];
         }
-        return ans;
+        return nums[n-1];
     }
 };
