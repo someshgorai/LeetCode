@@ -4,7 +4,7 @@ public:
         int n = grid[0].size(), m = grid.size();
         queue<pair<int, int>> q;
 
-        vector<vector<int>> cost(m, vector<int>(n, -1));
+        vector<vector<int>> cost(m, vector<int>(n, INT_MAX));
 
         if (grid[0][0] == 1) {
             if (health == 1) return false;
@@ -31,7 +31,7 @@ public:
 
                 if (r >= 0 && r < m && c >= 0 && c < n) {
                     int h = cost[x][y] + grid[r][c];
-                    if (cost[r][c] == -1 || h < cost[r][c]) {
+                    if (h < cost[r][c]) {
                         q.push({r, c});
                         cost[r][c] = h;
                     }
