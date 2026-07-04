@@ -2,8 +2,7 @@
 select e.name
 from employee as e
 inner join 
-(select managerId
-from employee 
-group by managerId
-having count(managerId) >= 5) as temp
-on e.id = temp.managerId;
+employee as m
+on e.id = m.managerId
+group by e.id
+having count(m.managerId) >= 5;
