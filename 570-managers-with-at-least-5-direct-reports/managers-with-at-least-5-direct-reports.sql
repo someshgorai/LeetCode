@@ -2,8 +2,8 @@
 select e.name
 from employee as e
 inner join 
-(select managerId, count(managerId) as freq
+(select managerId
 from employee 
-group by managerId) as temp
-on e.id = temp.managerId
-where temp.freq >= 5;
+group by managerId
+having count(managerId) >= 5) as temp
+on e.id = temp.managerId;
