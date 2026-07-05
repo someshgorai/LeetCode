@@ -1,39 +1,76 @@
 class Solution {
 public:
-    vector<pair<int, int>> dir = {{-1, 0}, {-1, -1}, {0, -1}};
-    int mod = 1e9+7;
+    int mod = 1e9 + 7;
     vector<int> pathsWithMaxScore(vector<string>& board) {
         int n = board.size();
-        vector<vector<vector<int>>> dp(n, vector<vector<int>>(n, vector<int>(2, 0)));
 
-        dp[0][0] = {0, 1};
+        vector<vector<vector<int>>> dp(2, vector<vector<int>>(n, vector<int>(2, 0)));
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (i == 0 && j == 0) continue;
+        for (int i = n - 1; i >= 0; i--) {
+            fill(dp[0].begin(), dp[0].end(), vector<int>{0, 0});
 
-                int maxSum = 0, paths = 0;
-                for (int d = 0; d < 3; d++) {
-                    int x = i + dir[d].first;
-                    int y = j + dir[d].second;
+            for (int j = n - 1; j >= 0; j--) {
+                if (board[i][j] == 'X') continue;
 
-                    if (x >= 0 && x < n && y >= 0 && y < n && board[x][y] != 'X') {
-                        auto res = dp[x][y];
-                        if (maxSum < res[0]) {
-                            maxSum = res[0];
-                            paths = res[1];
-                        }
-                        else if (res[0] == maxSum){
-                            paths = (paths + res[1]) % mod;
+                if (i == n - 1 && j == n - 1) {
+                    dp[0][j] = {0, 1};
+                    continue;
+                }
+
+                int best = -1;
+                int ways = 0;
+
+                // down
+                if (i + 1 < n) {
+                    auto &cur = dp[1][j];
+                    if (cur[1]) {
+                        if (cur[0] > best) {
+                            best = cur[0];
+                            ways = cur[1];
+                        } else if (cur[0] == best) {
+                            ways = (ways + cur[1]) % mod;
                         }
                     }
                 }
-                if (paths == 0) dp[i][j] = {0, 0};
-                else if (board[i][j] == 'S') dp[i][j] = {maxSum, paths};
-                else dp[i][j] = {(board[i][j] - '0') + maxSum, paths};
+
+                // right
+                if (j + 1 < n) {
+                    auto &cur = dp[0][j + 1];
+                    if (cur[1]) {
+                        if (cur[0] > best) {
+                            best = cur[0];
+                            ways = cur[1];
+                        } else if (cur[0] == best) {
+                            ways = (ways + cur[1]) % mod;
+                        }
+                    }
+                }
+
+                // diagonal
+                if (i + 1 < n && j + 1 < n) {
+                    auto &cur = dp[1][j + 1];
+                    if (cur[1]) {
+                        if (cur[0] > best) {
+                            best = cur[0];
+                            ways = cur[1];
+                        } else if (cur[0] == best) {
+                            ways = (ways + cur[1]) % mod;
+                        }
+                    }
+                }
+
+                if (ways == 0) continue;
+
+                int score = best;
+                if (board[i][j] != 'S' && board[i][j] != 'E')
+                    score += board[i][j] - '0';
+
+                dp[0][j] = {score, ways};
             }
+
+            swap(dp[0], dp[1]);
         }
 
-        return dp[n-1][n-1];
+        return dp[1][0];
     }
 };
