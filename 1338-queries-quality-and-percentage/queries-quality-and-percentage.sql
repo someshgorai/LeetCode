@@ -1,6 +1,6 @@
 # Write your MySQL query statement below
 select query_name, 
-round(avg(rating / position), 2) as quality, 
+round(sum(rating / position) / count(query_name), 2) as quality, 
 round(avg(
     case
         when rating < 3 then 1
