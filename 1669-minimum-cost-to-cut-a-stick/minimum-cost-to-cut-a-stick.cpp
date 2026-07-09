@@ -1,20 +1,4 @@
 class Solution {
-private:
-    int backtrack(int l, int r, vector<int>& cuts, vector<vector<int>> &dp) {
-        if (r - l  == 1) return 0;
-        if (dp[l][r] != -1) return dp[l][r];
-        int minCost = 1e9;
-        for (int i = l+1; i < r; i++) {
-            minCost = min(
-                minCost, 
-                cuts[r] - cuts[l] + 
-                backtrack(l, i, cuts, dp) +
-                backtrack(i, r, cuts, dp)
-            );
-        }
-
-        return dp[l][r] = minCost;
-    }
 public:
     int minCost(int n, vector<int>& cuts) {
         cuts.push_back(n);
@@ -22,6 +6,27 @@ public:
         sort(cuts.begin(), cuts.end());
         int m = cuts.size();
         vector<vector<int>> dp(m, vector<int> (m, -1));
-        return backtrack(0, m-1, cuts, dp);
+
+        for (int i = 0; i <= m-2; i++) {
+            dp[i][i+1] = 0;
+            dp[i+1][i] = 0;
+        }
+
+        for (int l = m-1; l >= 0; l--) {
+            for (int r = l+2; r <= m-1; r++) {
+                int minCost = 1e9;
+                for (int i = l+1; i < r; i++) {
+                    minCost = min(
+                        minCost, 
+                        cuts[r] - cuts[l] + 
+                        dp[l][i] +
+                        dp[i][r]
+                    );
+                }
+
+                dp[l][r] = minCost;
+            }
+        }
+        return dp[0][m-1];
     }
 };
