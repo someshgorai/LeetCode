@@ -1,15 +1,11 @@
 class Solution {
 private:
-    int getGCD(int n, int m) {
-        if (m == 0) return n;
-        return gcd(m, n % m);
-    }
     vector<vector<int>> getAllGCD(vector<int> &nums, int n) {
         vector<vector<int>> gcd(n, vector<int>(n));
         for(int i = 0; i < n; i++) {
             gcd[i][i] = nums[i];
             for (int j = i+1; j < n; j++) {
-                gcd[i][j] = gcd[j][i] = getGCD(nums[i], nums[j]);
+                gcd[i][j] = gcd[j][i] = __gcd(nums[i], nums[j]);
             }
         }
 
@@ -25,7 +21,7 @@ private:
 
         int maxScore = 0;
 
-        for (int i = 0; i < 2*n; i++) {
+        for (int i = 0; i < 2*n; i++) { // O((2n)^2 * 2^(2n))
             if (taken[i] == true) continue;
             taken[i] = true;
             for (int j = i+1; j < 2*n; j++) {
