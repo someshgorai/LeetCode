@@ -19,8 +19,21 @@ public:
         nums.push_back(1);
         
         int n = nums.size();
-        vector<vector<int>> dp(n, vector<int> (n, -1));
+        vector<vector<int>> dp(n, vector<int> (n, 0));
 
-        return backtrack(1, n-2, nums, dp);
+        for (int l = n-2; l >= 1; l--) {
+            for (int r = l; r <= n-2; r++) {
+                int maxCoins = 0;
+                for (int i = l; i <= r; i++) {
+                    int coins = nums[l-1] * nums[i] * nums[r+1] + 
+                        dp[l][i-1] + dp[i+1][r];
+                    maxCoins = max(maxCoins, coins);
+                }
+
+                dp[l][r] = maxCoins;
+            }
+        }
+
+        return dp[1][n-2];
     }
 };
