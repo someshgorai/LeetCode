@@ -25,9 +25,9 @@ public:
                         (take1 + take2 + notTake) % mod;
                 }
             }
-            dp[1] = dp[0];
+            swap(dp[0], dp[1]);
         }
 
-        return dp[0][0][0];
+        return dp[1][0][0];
     }
 };
