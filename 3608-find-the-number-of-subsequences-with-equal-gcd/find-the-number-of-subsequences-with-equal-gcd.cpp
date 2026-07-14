@@ -1,34 +1,32 @@
 class Solution {
-private:   
-    int mod = 1e9+7;
-    int backtrack(int idx, int gcd1, int gcd2, int n, vector<int> &nums, vector<vector<vector<int>>> &dp) {
-        // Base Case
-        if (idx >= n) {
-            if (gcd1 == 0 && gcd2 == 0) return 0;
-            return gcd1 == gcd2;
-        }
-
-        if (dp[idx][gcd1][gcd2] != -1) return dp[idx][gcd1][gcd2];
-
-        int take1, take2, notTake;
-        if (gcd1 == 0) {
-            take1 = backtrack(idx+1, nums[idx], gcd2, n, nums, dp);
-        }
-        else take1 = backtrack(idx+1, __gcd(gcd1, nums[idx]), gcd2, n, nums, dp);
-
-        if (gcd2 == 0) {
-            take2 = backtrack(idx+1, gcd1, nums[idx], n, nums, dp);
-        }
-        else take2 = backtrack(idx+1, gcd1, __gcd(gcd2, nums[idx]), n, nums, dp);
-
-        notTake = backtrack(idx+1, gcd1, gcd2, n, nums, dp);
-
-        return dp[idx][gcd1][gcd2] = ((take1+take2) % mod +notTake) % mod;
-    }
 public:
+    int mod = 1e9+7;
     int subsequencePairCount(vector<int>& nums) {
         int n = nums.size();
-        vector<vector<vector<int>>> dp(n, vector<vector<int>>(201, vector<int>(201, -1)));
-        return backtrack(0, 0, 0, n, nums, dp);
+        int m = *max_element(nums.begin(), nums.end());
+        vector<vector<vector<int>>> dp(n+1, vector<vector<int>>(m+1, vector<int>(m+1, 0)));
+        
+        for (int gcd = 1; gcd < m+1; gcd++) {
+            dp[n][gcd][gcd] = 1;
+        }
+
+        for (int idx = n - 1; idx >= 0; idx--) {
+            for (int g1 = 0; g1 <= m; g1++) {
+                for (int g2 = 0; g2 <= m; g2++) {
+
+                    int ng1 = (g1 == 0) ? nums[idx] : gcd(g1, nums[idx]);
+                    int ng2 = (g2 == 0) ? nums[idx] : gcd(g2, nums[idx]);
+
+                    long long take1 = dp[idx + 1][ng1][g2];
+                    long long take2 = dp[idx + 1][g1][ng2];
+                    long long notTake = dp[idx + 1][g1][g2];
+
+                    dp[idx][g1][g2] =
+                        (take1 + take2 + notTake) % mod;
+                }
+            }
+        }
+
+        return dp[0][0][0];
     }
 };
