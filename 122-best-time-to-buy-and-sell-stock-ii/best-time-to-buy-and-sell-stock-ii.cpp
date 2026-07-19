@@ -1,32 +1,29 @@
 class Solution {
-private:
-    int backtrack(int i, int action, int n, vector<int> &prices, vector<vector<int>> &dp) {
-        if (i >= n) {
-            return 0;
-        }
-
-        if (dp[i][action] != -1) return dp[i][action];
-        
-        int profit = 0;
-        if (action == 0) {
-            profit = max(
-                backtrack(i+1, 1, n, prices, dp) - prices[i],
-                backtrack(i+1, action, n, prices, dp)
-            );
-        }
-        else {
-            profit = max(
-                prices[i] + backtrack(i+1, 0, n, prices, dp),
-                backtrack(i+1, action, n, prices, dp)
-            );
-        }
-
-        return dp[i][action] = profit;
-    }
 public:
     int maxProfit(vector<int>& prices) {
         int n = prices.size();
-        vector<vector<int>> dp(n, vector<int>(2, -1));
-        return backtrack(0, 0, n, prices, dp);
+        vector<vector<int>> dp(n+1, vector<int>(2, 0));
+
+        for (int i = n-1; i >= 0; i--) {
+            for (int action = 0; action < 2; action++) {
+                int profit = 0;
+                if (action == 0) {
+                    profit = max(
+                        dp[i+1][1] - prices[i],
+                        dp[i+1][action]
+                    );
+                }
+                else {
+                    profit = max(
+                        prices[i] + dp[i+1][0],
+                        dp[i+1][action]
+                    );
+                }
+
+                dp[i][action] = profit;                
+            }
+        }
+
+        return dp[0][0];
     }
 };
