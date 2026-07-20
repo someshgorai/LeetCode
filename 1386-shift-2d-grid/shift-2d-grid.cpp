@@ -1,19 +1,22 @@
 class Solution {
 public:
+    void reverse(int i, int j, vector<vector<int>> &grid) {
+        int n = grid[0].size();
+        while (i < j) {
+            swap(grid[i/n][i%n], grid[j/n][j%n]);
+            i++;
+            j--;
+        }
+    }
     vector<vector<int>> shiftGrid(vector<vector<int>>& grid, int k) {
         int m = grid.size(), n = grid[0].size();
         int l = m * n;
-        k = k % l;
+        k  = k % l;
 
-        vector<vector<int>> temp(m, vector<int> (n));
+        reverse(0, l-1, grid);
+        reverse(0, k-1, grid);
+        reverse(k, l-1, grid);
 
-        for (int i = 0; i < l; i++) {
-            int x = i / n;
-            int y = i % n;
-            int nx = ((i+k)%l) / n;
-            int ny = ((i+k)%l) % n;
-            temp[nx][ny] = grid[x][y];
-        }
-        return temp;
+        return grid;
     }
 };
