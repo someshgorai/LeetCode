@@ -10,23 +10,20 @@
  * };
  */
 class Solution {
-private:
-    int maxi = 0;
-    int solve(TreeNode* node) {
-        // Base Case
-        if (node == nullptr) return 0;
-
-        int leftHeight = solve(node->left);
-
-        int rightHeight = solve(node->right);
-
-        maxi = max(maxi, leftHeight + rightHeight);
-
-        return 1 + max(leftHeight, rightHeight);
-    }
 public:
+    int maxDiameter = 0;
+    int getDiameter(TreeNode* node) {
+        if (!node) return 0;
+
+        int leftLength = getDiameter(node->left);
+        int rightLength = getDiameter(node->right);
+
+        maxDiameter = max(maxDiameter, leftLength + rightLength);
+
+        return max(leftLength, rightLength) + 1;
+    }
     int diameterOfBinaryTree(TreeNode* root) {
-        solve(root);
-        return maxi;
+        getDiameter(root);
+        return maxDiameter;
     }
 };
