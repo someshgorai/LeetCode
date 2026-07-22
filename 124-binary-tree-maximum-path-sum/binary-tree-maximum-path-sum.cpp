@@ -11,28 +11,22 @@
  */
 class Solution {
 private:
-    int solve(TreeNode* node, int &maxPathSum) {
-        if (node == nullptr) return 0;
+    int getPathSum(TreeNode* node, int &maxSum) {
+        if (!node) return 0;
 
-        int leftSum = max(0, solve(node->left, maxPathSum));
-        int rightSum = max(0, solve(node->right, maxPathSum));
+        int leftSum = max(0, getPathSum(node->left, maxSum));
+        int rightSum = max(0, getPathSum(node->right, maxSum));
 
-        int nodeValue = node->val;
+        maxSum = max(maxSum, leftSum + rightSum + node->val);
 
-        // Case: path passing through current node
-        int currentPath = nodeValue + leftSum + rightSum;
-
-        // Update global maximum
-        maxPathSum = max(maxPathSum, currentPath);
-
-        // Return best single path (no split)
-        return nodeValue + max(leftSum, rightSum);
+        return max(leftSum, rightSum) + node->val;
     }
-
 public:
     int maxPathSum(TreeNode* root) {
-        int maxPathSum = INT_MIN;   // important fix
-        solve(root, maxPathSum);
-        return maxPathSum;
+        if (!root) return 0;
+
+        int maxSum = -1e3;
+        getPathSum(root, maxSum);
+        return maxSum;
     }
 };
