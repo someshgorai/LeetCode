@@ -9,7 +9,7 @@ public:
         vector<vector<vector<ll>>> dist(
             m, vector<vector<ll>>(n, vector<ll>(2, 1e18)));
 
-        int drow[2][2] = {{0, 1}, {0, -1}};
+        int drow[2][2] = {{0, -1}, {0, 1}};
         int dcol[2][2] = {{-1, 0}, {1, 0}};
 
         dist[0][0][0] = 1;
@@ -25,9 +25,11 @@ public:
             if (x == m - 1 && y == n - 1)
                 return cur;
 
-            if (cur + penalty[x][y] < dist[x][y][!p]) {
-                dist[x][y][!p] = cur + penalty[x][y];
-                pq.push({dist[x][y][!p], x, y, !p});
+            int Alter_p = !p;
+
+            if (cur + penalty[x][y] < dist[x][y][Alter_p]) {
+                dist[x][y][Alter_p] = cur + penalty[x][y];
+                pq.push({dist[x][y][Alter_p], x, y, Alter_p});
             }
 
             for (int i = 0; i < 2; i++) {
@@ -40,7 +42,13 @@ public:
 
                     ll nxt = cur + 1LL * (r + 1) * (c + 1);
 
-                    bool legal = (p == 0 ? (i != j) : (i == j));
+                    bool legal;
+
+                    if (p == 0)
+                        legal = (i == 1);
+                    else
+                        legal = (i == 0);
+
                     if (!legal)
                         nxt += penalty[x][y];
 
