@@ -1,34 +1,24 @@
 class Solution {
 public:
     string smallestPalindrome(string s) {
+        int n = s.size();
         vector<int> vis(26, 0);
-        for (char c : s) {
-            vis[c-'a']++;
+        for (int i = 0; i < n/2; i++) {
+            vis[s[i] - 'a']++;
         }
 
-        string mid = "";
-        string first = "";
+        string ans = s;
+        int left = 0, right = n-1;
         for (int i = 0; i < 26; i++) {
-            if (vis[i] & 1) {
-                char c = 'a' + i;
-                int len = (vis[i]-1)/2;
-
-                string s1(len, c);
-                first = first + s1;
-                mid = c;
-            }
-            else {
-                char c = 'a' + i;
-                int len = vis[i]/2;
-
-                string s1(len, c);
-                first = first + s1;
+            while (vis[i] > 0) {
+                char c = i + 'a';
+                ans[left] = c;
+                ans[right] = c;
+                left++;
+                right--;
+                vis[i]--;
             }
         }
-
-        string second = first;
-        reverse(second.begin(), second.end());
-
-        return first + mid + second;
+        return ans;
     }
 };
