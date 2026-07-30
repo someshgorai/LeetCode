@@ -2,21 +2,16 @@ class Solution {
 public:
     int minimumPushes(string word) {
         int n = word.size();
-        vector<int> index(26, 0);
-        
-        int layer = 0, press = 0;
-        for (char w : word) {
-            if (index[w-'a'] == 0) {
-                int idx = (layer / 8) + 1;
-                index[w-'a'] = idx;
-                press += idx;
-                layer++;
-            }
-            else {
-                press += index[w - 'a'];
-            }
+        int layers = n/8;
+        if (layers == 0) {
+            return (n % 8);
         }
-
-        return press;
+        else if (layers == 1) {
+            return 8 + (n % 8) * 2;
+        }
+        else if (layers == 2) {
+            return 24 + (n % 8) * 3;
+        }
+        return 48 + (n % 8)*4;
     }
 };
