@@ -1,20 +1,6 @@
 class Solution {
-    typedef long long ll;
-private:
-    bool isValid(ll energy, vector<ll> &boosts, vector<int> &monsters) {
-        ll boost = 0;
-        int n = monsters.size();
-        for (int i = 0; i < n; i++) {
-            boost += boosts[i];
-            if (boost + energy >= monsters[i]) {
-                energy = max(energy - monsters[i], 0LL);
-            } 
-            else return false;
-        }
-
-        return true;
-    }
 public:
+    typedef long long ll;
     long long minInitialStrength(vector<int>& monsters, vector<vector<int>>& boosts) {
         int n = monsters.size();
         vector<ll> new_boosts(n+1, 0);
@@ -27,16 +13,16 @@ public:
         }
 
         
-        ll high = accumulate(monsters.begin(), monsters.end(), 0LL);
-        ll low = 0;
-
-        while (low <= high) {
-            ll mid = (high - low)/2 + low;
-
-            if (isValid(mid, new_boosts, monsters)) high = mid - 1;
-            else low = mid + 1;
+        ll ans = 0, prev = 0, bonus = 0;
+        for (int i = 0; i < n; i++) {
+            bonus += new_boosts[i];
+            ll need = monsters[i] - bonus;
+            if (need > 0) {
+                ans = max(ans, need + prev);
+            }
+            prev += monsters[i];
         }
 
-        return low;
+        return ans;
     }
 };
