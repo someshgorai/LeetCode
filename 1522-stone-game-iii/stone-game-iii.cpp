@@ -1,20 +1,27 @@
 class Solution {
-public:
-    static inline string s[] = {"Bob", "Tie", "Alice"};
-    string stoneGameIII(vector<int>& A) {
-        int n = A.size();
-        int dp[4] = {0, 0, 0, 0};
+private:
+    int backtrack(int i, int n, vector<int> &stoneValue, vector<int> &dp) {
+        if (i >= n) return 0;
 
-        for (int i = n - 1; i >= 0; i--) {
-            int j = i & 3;
+        if (dp[i] != -1e9) return dp[i];
 
-            dp[j] = A[i] - dp[(i + 1) & 3];
-            if (i + 2 <= n)
-                dp[j] = max(dp[j], A[i] + A[i + 1] - dp[(i + 2) & 3]);
-            if (i + 3 <= n)
-                dp[j] = max(dp[j], A[i] + A[i + 1] + A[i + 2] - dp[(i + 3) & 3]);
+        int stones = 0;
+        int maxScore = -1e9;
+        for (int j = 0; (j < 3) && (i + j < n); j++) {
+            stones += stoneValue[i+j];
+            maxScore = max(maxScore, stones - backtrack(i+j+1, n, stoneValue, dp));
         }
 
-        return s[(dp[0] > 0) - (dp[0] < 0) + 1];
+        return dp[i] = maxScore;
+    }
+public:
+    string stoneGameIII(vector<int>& stoneValue) {
+        int n = stoneValue.size();
+        vector<int> dp(n, -1e9);
+        int diff = backtrack(0, n, stoneValue, dp);
+    
+        if (diff > 0) return "Alice";
+        else if (diff < 0) return "Bob";
+        return "Tie";
     }
 };
