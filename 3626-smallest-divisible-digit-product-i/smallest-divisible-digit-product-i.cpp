@@ -14,15 +14,13 @@ private:
     }
 public:
     int smallestNumber(int n, int t) {
-        int start = n;
-        while (true) {
-            long long digitProduct = getDigitProduct(start);
-            if (digitProduct % t == 0) {
-                return start;
-            }
-            start++;
+        int i;
+        for (i = n; i % 10 != 0; i++) {
+            long long digitProduct = getDigitProduct(i);
+
+            if (digitProduct % t == 0) return i;
         }
 
-        return -1;
+        return i;
     }
 };
