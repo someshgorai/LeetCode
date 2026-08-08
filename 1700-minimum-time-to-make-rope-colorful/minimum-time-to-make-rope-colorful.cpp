@@ -4,11 +4,6 @@ public:
         int n = colors.size();
         int m = neededTime.size();
 
-        vector<int> prefix(n+1, 0);
-        for(int i = 0; i < n; i++) {
-            prefix[i+1] = prefix[i] + neededTime[i];
-        }
-
         char prev = 'A';
         int i = 0;
         int time = 0;
@@ -17,13 +12,15 @@ public:
                 int start = i-1;
                 int end;
                 int maxTime = neededTime[start];
+                int total = neededTime[start];
                 while (prev == colors[i]) {
                     end = i;
+                    total += neededTime[i];
                     maxTime = max(maxTime, neededTime[i]);
                     i++;
                 }
 
-                time += prefix[end+1] - prefix[start] - maxTime;
+                time += total - maxTime;
             }
             else {
                 prev = colors[i];
