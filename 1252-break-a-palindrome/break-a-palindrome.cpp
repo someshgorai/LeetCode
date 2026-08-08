@@ -1,31 +1,19 @@
 class Solution {
-private:
-    string getLexiSmaller(string word) {
-        int n = word.size();
-        int mid = n/2;
-        for (int i = 0; i < n; i++) {
-            char &c = word[i];
-
-            if (c != 'a') {
-                if ((i == mid) && (n & 1)) {
-                    continue;
-                }
-                c = 'a';
-                return word;
-            }
-        }
-
-        word.pop_back();
-        word.push_back('b');
-        return word;
-    }
 public:
     string breakPalindrome(string palindrome) {
         int n = palindrome.size();
         if (n == 1) return "";
+        int mid = n/2;
+        string word = palindrome;
 
-        string newWord = getLexiSmaller(palindrome);
+        for (int i = 0; i < mid; i++) {
+            if (word[i] != 'a') {
+                word[i] = 'a';
+                return word;
+            }
+        }
 
-        return newWord;
+        word[n-1] = 'b';
+        return word;
     }
 };
