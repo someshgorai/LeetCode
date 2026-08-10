@@ -1,16 +1,19 @@
 class Solution {
-public:
-    bool winnerSquareGame(int n) {
-        vector<bool> dp(n+1, false);
+private:
+    bool solve(int n, vector<int> &dp) {
+        if (n == 0) return false;
 
-        for (int i = 0; i <= n; i++) {
-            if (!dp[i]) {
-                for (int j = 1; i + j * j <= n; j++) {
-                    dp[i + j*j] = true;
-                }
-            }
+        if (dp[n] != -1) return dp[n];
+
+        for (int k = 1; k*k <= n; k++) {
+            if (solve(n - k * k, dp) == false) return dp[n] = true;
         }
 
-        return dp[n];
+        return dp[n] = false;
+    }
+public:
+    bool winnerSquareGame(int n) {
+        vector<int> dp(n+1, -1);
+        return solve(n, dp);
     }
 };
