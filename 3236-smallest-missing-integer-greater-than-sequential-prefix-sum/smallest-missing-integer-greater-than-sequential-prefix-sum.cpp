@@ -11,10 +11,12 @@ public:
             else break;
         }
 
-        unordered_set<int> s(nums.begin(), nums.end());
+        sort(nums.begin(), nums.end());
+        auto it = lower_bound(nums.begin(), nums.end(), prefixSum) - nums.begin();
 
-        while(s.find(prefixSum) != s.end()) {
+        while(it < n && nums[it] == prefixSum) {
             prefixSum++;
+            it = lower_bound(nums.begin(), nums.end(), prefixSum) - nums.begin();
         }
 
         return prefixSum;
