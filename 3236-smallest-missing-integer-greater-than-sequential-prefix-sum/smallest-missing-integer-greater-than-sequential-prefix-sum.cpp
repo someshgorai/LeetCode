@@ -11,10 +11,7 @@ public:
             else break;
         }
 
-        unordered_set<int> s;
-        for (int i : nums) {
-            s.insert(i);
-        }
+        unordered_set<int> s(nums.begin(), nums.end());
 
         while(s.find(prefixSum) != s.end()) {
             prefixSum++;
