@@ -8,23 +8,24 @@ public:
             mp[num]++;
         }
 
-        int pqSize = 0;
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
-        for (auto &[num, freq] : mp) {
-            if (pqSize < k) {
-                pq.push({freq, num});
-                pqSize++;
-            }
-            else {
-                pq.push({freq,num});
-                pq.pop();
-            }
+        vector<vector<int>> freq(n+1);
+        for (auto &[num, count] : mp) {
+            freq[count].push_back(num);
         }
 
         vector<int> res;
-        while(!pq.empty()) {
-            res.push_back(pq.top().second);
-            pq.pop();
+        for (int i = n; i >= 1 && k > 0; i--) {
+            int len = freq[i].size();
+            int cnt = 0;
+
+            if (len > 0) {   
+                for (int j = 0; j <= min(k, len-1); j++) {
+                    res.push_back(freq[i][j]);
+                    cnt++;
+                }
+            }
+
+            k -= cnt;
         }
 
         return res;
