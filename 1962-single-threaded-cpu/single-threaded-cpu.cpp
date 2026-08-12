@@ -1,35 +1,34 @@
 class Solution {
 public:
     typedef pair<int, int> P;
+    typedef long long ll;
+
     vector<int> getOrder(vector<vector<int>>& tasks) {
         int n = tasks.size();
 
-        vector<vector<int>> jobs;
+        priority_queue<vector<ll>, vector<vector<ll>>, greater<vector<ll>>> jobs;
+
         for (int i = 0; i < n; i++) {
-            int at = tasks[i][0];
-            int bt = tasks[i][1];
-            jobs.push_back({at, bt, i});
+            jobs.push({tasks[i][0], tasks[i][1], i});
         }
 
-        sort(jobs.begin(), jobs.end());
-
-        long long t = 0;
-        int i = 0;
+        ll t = 0;
         priority_queue<P, vector<P>, greater<P>> pq;
         vector<int> order;
 
-        while (i < n || !pq.empty()) {
-            if (pq.empty()) t = max(t, 1LL * jobs[i][0]);
+        while (!jobs.empty() || !pq.empty()) {
 
-            while (i < n && jobs[i][0] <= t) {
-                int bt = jobs[i][1];
-                int process = jobs[i][2];
+            if (pq.empty())
+                t = max(t, jobs.top()[0]);
 
-                pq.push({bt, process});
-                i++;
+            while (!jobs.empty() && jobs.top()[0] <= t) {
+                auto job = jobs.top();
+                jobs.pop();
+
+                pq.push({job[1], job[2]});
             }
 
-            auto [bt, process]= pq.top();
+            auto [bt, process] = pq.top();
             pq.pop();
 
             t += bt;
