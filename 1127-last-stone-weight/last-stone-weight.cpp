@@ -1,50 +1,21 @@
 class Solution {
-private:
-    pair<int, int> getLargestPair(vector<int>& nums) {
-        int n = nums.size();
-
-        int large = 0, secLarge = 1;
-
-        if (nums[secLarge] > nums[large])
-            swap(large, secLarge);
-
-        for (int i = 2; i < n; i++) {
-            if (nums[i] > nums[large]) {
-                secLarge = large;
-                large = i;
-            }
-            else if (nums[i] > nums[secLarge]) {
-                secLarge = i;
-            }
-        }
-
-        return {large, secLarge};
-    }
-
 public:
     int lastStoneWeight(vector<int>& stones) {
-        vector<int> nums = stones;
+        priority_queue<int> pq(stones.begin(), stones.end());
 
-        while (nums.size() > 1) {
-            auto [largest, secLargest] = getLargestPair(nums);
+        while (pq.size() > 1) {
+            int large = pq.top();
+            pq.pop();
 
-            nums[largest] -= nums[secLargest];
+            int secLarge = pq.top();
+            pq.pop();
 
-            if (nums[largest] == 0) {
-                if (largest > secLargest) {
-                    nums.erase(nums.begin() + largest);
-                    nums.erase(nums.begin() + secLargest);
-                }
-                else {
-                    nums.erase(nums.begin() + secLargest);
-                    nums.erase(nums.begin() + largest);
-                }
-            }
-            else {
-                nums.erase(nums.begin() + secLargest);
+            int diff = large - secLarge;
+            if (diff > 0) {
+                pq.push(diff);
             }
         }
 
-        return nums[0];
+        return pq.empty() ? 0 : pq.top();
     }
 };
