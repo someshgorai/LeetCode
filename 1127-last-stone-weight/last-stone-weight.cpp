@@ -45,6 +45,6 @@ public:
             }
         }
 
-        return nums.empty() ? 0 : nums[0];
+        return nums[0];
     }
 };
