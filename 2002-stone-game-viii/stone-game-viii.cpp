@@ -12,22 +12,23 @@ private:
     }
 public:
     int stoneGameVIII(vector<int>& stones) {
-        int n = stones.size();
-        vector<int> dp(n, 0);
+        int n = stones.size(); 
         vector<int> prefix(n+1, 0);
 
         for (int i = 0; i < n; i++) {
             prefix[i+1] = stones[i] + prefix[i];
         }
 
-        dp[n-1] = prefix[n];
+        int prev = prefix[n];
+        int curr;
 
         for (int idx = n-2; idx >= 0; idx--) {
-            int take = prefix[idx+1] - dp[idx+1];
-            int notTake = dp[idx+1];
-            dp[idx] = max(take, notTake);
+            int take = prefix[idx+1] - prev;
+            int notTake = prev;
+            curr = max(take, notTake);
+            swap(curr, prev);
         }
 
-        return dp[1];
+        return curr;
     }
 };
