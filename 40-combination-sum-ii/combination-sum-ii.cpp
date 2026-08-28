@@ -1,10 +1,12 @@
 class Solution {
 private:   
     void backtrack(int idx, int n, int target, vector<int> &comb, vector<vector<int>> &ans, vector<int> &candidates) {
-        if (idx == n) {
-            if (target == 0) ans.push_back(comb);
+        if (target == 0) {
+            ans.push_back(comb);
             return;
         }
+
+        if (idx == n) return;
 
         if (candidates[idx] <= target) {
             comb.push_back(candidates[idx]);
