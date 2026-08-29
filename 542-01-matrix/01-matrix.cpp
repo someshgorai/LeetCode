@@ -1,23 +1,44 @@
 class Solution {
 public:
-    vector<int> DIR = {0, 1, 0, -1, 0};
     vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
         int m = mat.size(), n = mat[0].size();
-        queue<pair<int, int>> q;
-        for (int r = 0; r < m; ++r)
-            for (int c = 0; c < n; ++c)
-                if (mat[r][c] == 0) q.emplace(r, c);
-                else mat[r][c] = -1; // Marked as not processed yet!
 
-        while (!q.empty()) {
-            auto [r, c] = q.front(); q.pop();
-            for (int i = 0; i < 4; ++i) {
-                int nr = r + DIR[i], nc = c + DIR[i+1];
-                if (nr < 0 || nr == m || nc < 0 || nc == n || mat[nr][nc] != -1) continue;
-                mat[nr][nc] = mat[r][c] + 1;
-                q.emplace(nr, nc);
+        vector<vector<bool>> vis(m, vector<bool> (n, false));
+        queue<pair<int, pair<int, int>>> q;
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (mat[i][j] == 0) {
+                    vis[i][j] = true;
+                    q.push({0, {i, j}});
+                }
             }
         }
-        return mat;
+
+        int drow[] = {1, 0, -1, 0};
+        int dcol[] = {0, 1, 0, -1};
+
+        vector<vector<int>> ans(m, vector<int> (n , 0));
+
+        while (!q.empty()) {
+            auto [dist, locus] = q.front();
+            auto [i, j]        = locus;
+            q.pop();
+
+            ans[i][j] = dist;
+
+            for (int k = 0; k < 4; k++) {
+                int r = i + drow[k];
+                int c = j + dcol[k];
+
+                if (r < 0 || c < 0 || r >= m || c >= n) continue;
+                if (!vis[r][c]) {
+                    vis[r][c] = true;
+                    q.push({dist + 1, {r, c}});
+                }   
+            }
+        }
+
+        return ans;
     }
 };
