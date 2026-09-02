@@ -16,6 +16,7 @@ public:
             q.pop();
             auto [x, y] = it.second;
             int travel = it.first;
+            if (travel > dist[x][y]) continue;
             if (x == n-1 && y == n-1) return dist[x][y];
 
             for (int i = 0; i < 8; i++) {
