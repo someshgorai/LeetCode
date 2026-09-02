@@ -1,57 +1,41 @@
-//Greedy & Union Find
-class UnionFind {    
-    vector<int> root, rank;
-public:
-    UnionFind(int n) : root(n), rank(n) {
-        rank.assign(n, 1);
-        iota(root.begin(), root.end(), 0);
-    }
-
-    int Find(int x) {
-        return (x == root[x])?x:root[x]=Find(root[x]);
-    }
-
-    void Union(int x, int y) {
-        x= Find(x), y= Find(y);
-        if (x == y)  return;
-        if (rank[x] > rank[y]) swap(x, y);   
-        root[x] = y;
-        if (rank[x]==rank[y]) rank[y]++;
-    }
-};
 class Solution {
 public:
-    using int3=tuple<int, int, int>; // (wt, v, w)
-    int n;
-    int to1D(int i, int j){
-        return i*n+j;
-    }
+    using PP = pair<int, pair<int, int>>;
     int swimInWater(vector<vector<int>>& grid) {
-        n=grid.size();
-        if (n==1) return 0;// edge case
-        //Build edges (wt, v, w)
-        vector<int3> edges;
-        for(int i=0; i<n; i++){
-            for(int j=0; j<n; j++){
-                if (i<n-1){
-                    int wt=max(grid[i][j], grid[i+1][j]);
-                    edges.emplace_back(wt, to1D(i, j), to1D(i+1, j));
-                }
-                if (j<n-1){
-                    int wt=max(grid[i][j], grid[i][j+1]);
-                    edges.emplace_back(wt, to1D(i, j), to1D(i, j+1));
+        int m = grid.size();
+        int n = grid[0].size();
+
+        priority_queue<PP, vector<PP>, greater<PP>> pq;
+        vector<vector<int>> time(m, vector<int> (n, 1e9));
+
+        pq.push({grid[0][0], {0, 0}});
+        time[0][0] = grid[0][0];
+
+        int drow[] = {1, 0, -1, 0};
+        int dcol[] = {0, 1, 0, -1};
+
+        while (!pq.empty()) {
+            auto [t, locus] = pq.top();
+            auto [x, y] = locus;
+            pq.pop();
+
+            if (t > time[x][y]) continue;
+            if (x == m-1 && y == n-1) return t;
+
+            for (int i = 0; i < 4; i++) {
+                int r = x + drow[i];
+                int c = y + dcol[i];
+
+                if (r < 0 || c < 0 || r >= m || c >= n) continue;
+                
+                int reqTime = max(t, grid[r][c]);
+                if (reqTime < time[r][c]) {
+                    time[r][c] = reqTime;
+                    pq.push({reqTime, {r, c}});
                 }
             }
         }
-        sort(edges.begin(), edges.end());
-        int V=n*n;
-        UnionFind uf(V);
-        for(auto& [wt, v, w]: edges){
-            if (uf.Find(v)!=uf.Find(w))
-                uf.Union(v, w);
-            if (uf.Find(0)==uf.Find(V-1))
-                return wt;
-        }
-        return 0;
+
+        return -1;
     }
 };
