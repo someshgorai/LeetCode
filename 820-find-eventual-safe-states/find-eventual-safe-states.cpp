@@ -1,34 +1,47 @@
 class Solution {
-private:
-public:
-    vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+    vector<vector<int>> reverseGraph(vector<vector<int>> &graph, vector<int>& indegree) {
         int n = graph.size();
-        vector<vector<int>> adjRev(n);
-        vector<int> safeNodes, indegree(n, 0);
-        for (int i=0; i<graph.size(); i++) {
-            for (int j:graph[i]) {
-                adjRev[j].push_back(i);
+        vector<vector<int>> revGraph(n);
+        for (int i = 0; i < n; i++) {
+            for (int neightbor : graph[i]) {
+                revGraph[neightbor].push_back(i); 
                 indegree[i]++;
             }
         }
+        return revGraph;
+    }
+public:
+    vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+        int n = graph.size();
+    
+        vector<int> indegree(n, 0);
+        vector<vector<int>> revGraph = reverseGraph(graph, indegree);
+
         queue<int> q;
-        for (int i=0; i<n; i++) {
-            if (indegree[i] == 0) q.push(i);
+        vector<int> safeNode;
+
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0) {
+                q.push(i);
+            }
         }
 
+        
         while (!q.empty()) {
             int node = q.front();
-            safeNodes.push_back(node);
+            safeNode.push_back(node);
             q.pop();
-            for (int i:adjRev[node]) {
-                indegree[i]--;
-                if (indegree[i] == 0) {
-                    q.push(i);
+
+            for (int neighbor :revGraph[node]) {
+                indegree[neighbor]--;
+                if (indegree[neighbor] == 0) {
+                    q.push(neighbor);
                 }
             }
         }
 
-        sort(safeNodes.begin(), safeNodes.end());
-        return safeNodes;
+        sort(safeNode.begin(), safeNode.end());
+
+        return safeNode;
     }
 };
