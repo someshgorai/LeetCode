@@ -35,9 +35,10 @@ private:
 public:
     int maxSubarraySumCircular(vector<int>& nums) {
         long long total = accumulate(nums.begin(), nums.end(), 0LL);
-        int cycle = (int)total - minKadane(nums);
         int nonCycle = maxKadane(nums);
-        if (cycle == 0) return nonCycle;
+        if (nonCycle < 0) return nonCycle;
+
+        int cycle = (int)total - minKadane(nums);
         return max(cycle, nonCycle);
     }
 };
