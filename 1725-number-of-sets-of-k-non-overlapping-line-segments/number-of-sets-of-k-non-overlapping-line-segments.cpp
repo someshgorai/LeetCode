@@ -1,24 +1,27 @@
 class Solution {
 private:
     int mod = 1e9+7;
-    int backtrack(int i, int d, int n, vector<vector<int>>& dp) {
-        if (d == 0) return 1;
-        if (i >= n) return 0;
-
-        if (dp[i][d] != -1) return dp[i][d];
-
-        int take = 0;
-        for (int s = i+1; s < n - d + 1; s++) {
-            take = (backtrack(s, d-1, n, dp) + take) % mod;
-        }
-        int notTake = backtrack(i+1, d, n, dp);
-
-        return dp[i][d] = (take + notTake) % mod;
-    }
 public:
     int numberOfSets(int n, int k) {
-        vector<vector<int>> dp(n, vector<int> (k+1, -1));
+        vector<vector<int>> dp(k+1, vector<int> (n+1, 0));
 
-        return backtrack(0, k, n, dp);
+        for (int i = 0; i <= n; i++) {
+            dp[0][i] = 1;
+        }
+
+        for (int d = 1; d <= k; d++) {
+            vector<int> prefix(n+1);
+            for (int i = n-1; i >= 0; i--) {
+                prefix[i] = (prefix[i+1] + dp[d-1][i]) % mod;
+            }
+            for (int i = n-1; i >= 0; i--) {
+                int take = prefix[i+1] % mod;
+                int notTake = dp[d][i+1];
+
+                dp[d][i] = (take + notTake) % mod;
+            }
+        }
+
+        return dp[k][0];
     }
 };
