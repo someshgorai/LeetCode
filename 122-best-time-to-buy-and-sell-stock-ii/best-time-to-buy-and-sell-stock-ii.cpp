@@ -22,7 +22,24 @@ private:
 public:
     int maxProfit(vector<int>& prices) {
         int n = prices.size();
-        vector<vector<int>> dp(n, vector<int>(2, -1));
-        return backtrack(0, n, false, prices, dp);
+        vector<vector<int>> dp(n+1, vector<int>(2, 0));
+
+        for (int i = n-1; i >= 0; i--) {
+            for (int isHold = 0; isHold < 2; isHold++) {
+                int buy = 0, sell = 0;
+                if (isHold == 1) {
+                    sell = prices[i] + dp[i+1][isHold - 1];
+                }
+                else {
+                    buy = -prices[i] + dp[i+1][isHold + 1];
+                }
+
+                int skip = dp[i+1][isHold];
+
+                dp[i][isHold] = max({buy, sell, skip});
+            }
+        }
+
+        return dp[0][0];
     }
 };
