@@ -3,9 +3,7 @@ public:
     int minOperations(string s) {
         int mn = *min_element(s.begin(), s.end());
         int mx = *max_element(s.begin(), s.end());
-        string temp = s;
-        sort(temp.begin(), temp.end());
-        if (s == temp) return 0;
+        if (is_sorted(s.begin(), s.end())) return 0;
         int n  = s.size();
 
         if (n == 2) return -1;
