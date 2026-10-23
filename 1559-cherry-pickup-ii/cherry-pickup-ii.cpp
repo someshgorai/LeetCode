@@ -1,43 +1,37 @@
 class Solution {
+    typedef vector<int> V;
+private:    
+    int backtrack(int r, int c1, int c2, int m, int n, vector<vector<int>>& grid, vector<vector<V>>& dp) {
+        if (r == m) {
+            return 0;
+        }
+
+        if (dp[r][c1][c2] != -1) return dp[r][c1][c2];
+
+        int maxScore = 0;
+        for (int i = -1; i < 2; i++) {
+            int next_c1 = c1 + i;
+            if (next_c1 < 0 || next_c1 >= n) continue;
+            for (int j = -1; j < 2; j++) {
+                int next_c2 = c2 + j;
+                if (next_c2 < 0 || next_c2 >= n) continue;
+                if (c1 == c2) maxScore = max(
+                    maxScore, 
+                    grid[r][c1] + backtrack(r + 1, next_c1, next_c2, m, n, grid, dp)
+                );
+                else maxScore = max(
+                    maxScore, 
+                    grid[r][c1] + grid[r][c2] + backtrack(r + 1, next_c1, next_c2, m, n, grid, dp)
+                );
+            }
+        }
+
+        return dp[r][c1][c2] = maxScore;
+    }
 public:
     int cherryPickup(vector<vector<int>>& grid) {
         int m = grid.size(), n = grid[0].size();
-        vector<vector<int>> dp (n, vector<int>(n, 0));
-        int dir[3] = {-1, 0, 1};
-
-        for (int c1 = 0; c1 < n; c1++) {
-            for (int c2 = 0; c2 < n; c2++) {
-                if (c1 == c2) dp[c1][c2] = grid[m-1][c1];
-                else dp[c1][c2] = grid[m-1][c1] + grid[m-1][c2];
-            }
-        }
-
-        for (int r = m-2; r >= 0; r--) {
-            vector<vector<int>> temp(n, vector<int> (n, 0));
-
-            for (int c1 = n-1; c1 >= 0; c1--) {
-                for (int c2 = n-1; c2 >= 0; c2--) {
-                    int maxCherries = 0;
-                    for (int k = 0; k < 3; k++) {
-                        int y1 = c1 + dir[k];
-
-                        if (y1 < 0 || y1 >= n) continue;
-                        for (int l = 0; l < 3; l++) {
-                            int y2 = c2 + dir[l];
-
-                            if (y2 < 0 || y2 >= n) continue;
-
-                            maxCherries = max(maxCherries, dp[y1][y2]);
-                        }
-                    }
-
-                    if (c1 == c2) temp[c1][c2] = maxCherries + grid[r][c1];
-                    else temp[c1][c2] = maxCherries + grid[r][c1] + grid[r][c2];
-                }
-            }
-            dp = temp;
-        }
-
-        return dp[0][n-1];
+        vector<vector<V>> dp(m, vector<V>(n, V(n, -1)));
+        return backtrack(0, 0, n - 1, m, n, grid, dp);
     }
 };
