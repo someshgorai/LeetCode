@@ -10,20 +10,31 @@
  * };
  */
 class Solution {
-private:
-    void rightView(TreeNode* node, vector<int> &order, int level) {
-        if (level == order.size()) order.push_back(node->val);
-
-        if (node->right) rightView(node->right, order, level + 1);
-        if (node->left)  rightView(node->left, order, level + 1);
-    }
 public:
     vector<int> rightSideView(TreeNode* root) {
-        vector<int> order;
-        if (!root) return order;
+        if (!root) return {};
+        int level = 0;
+        vector<int> sideView;
 
-        rightView(root, order, 0);
+        queue<TreeNode*> q;
+        q.push(root);
 
-        return order;
+        while (!q.empty()) {
+            int size = q.size();
+            int rightMost = -1e9;
+            for (int i = 0; i < size; i++) {
+                TreeNode* node = q.front();
+                q.pop();
+
+                if (node->left != nullptr) q.push(node->left);
+                if (node->right != nullptr) q.push(node->right);
+
+                rightMost = node->val;
+            }
+
+            if (rightMost != -1e9) sideView.push_back(rightMost);
+        }
+
+        return sideView;
     }
 };
