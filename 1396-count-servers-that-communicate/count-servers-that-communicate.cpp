@@ -1,53 +1,27 @@
 class Solution {
-private:    
-    int getCommunicateServerCount(int i, int j, int m, int n, vector<vector<bool>>& vis, vector<vector<int>>& grid) {
-        queue<pair<int, int>> q;
-        q.push({i, j});
-        vis[i][j] = true;
-        int count = 0;
-
-        while (!q.empty()) {
-            auto [x, y] = q.front();
-            q.pop();
-            count++;
-
-            if (!vis[x][n]) {
-                for (int k = 0; k < n; k++) {
-                    if (!vis[x][k] && grid[x][k] == 1) {
-                        q.push({x, k});
-                        vis[x][k] = true;
-                    }
-                }
-                vis[x][n] = true;
-            }
-
-            if (!vis[m][y]) {
-                for (int l = 0; l < m; l++) {
-                    if (!vis[l][y] && grid[l][y] == 1) {
-                        q.push({l, y});
-                        vis[l][y] = true;
-                    }
-                }
-                vis[m][y] = true;
-            }
-        }
-
-        return count == 1 ? 0 : count;
-    }
 public:
     int countServers(vector<vector<int>>& grid) {
         int m = grid.size(), n = grid[0].size();
-        vector<vector<bool>> vis(m + 1, vector<bool> (n + 1, false));
+        vector<int> row(m), col(n);
 
-        int serverCount = 0;
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                if (!vis[i][j] && grid[i][j] == 1) {
-                    serverCount += getCommunicateServerCount(i, j, m, n, vis, grid);
+                if (grid[i][j] == 1) {
+                    row[i]++;
+                    col[j]++;
                 }
             }
         }
 
-        return serverCount;
+        int cnt = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1 && (row[i] > 1 || col[j] > 1)) {
+                    cnt++;
+                }
+            }
+        } 
+
+        return cnt;
     }
 };
