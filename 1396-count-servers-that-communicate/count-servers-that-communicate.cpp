@@ -11,18 +11,24 @@ private:
             q.pop();
             count++;
 
-            for (int k = 0; k < n; k++) {
-                if (!vis[x][k] && grid[x][k] == 1) {
-                    q.push({x, k});
-                    vis[x][k] = true;
+            if (!vis[x][n]) {
+                for (int k = 0; k < n; k++) {
+                    if (!vis[x][k] && grid[x][k] == 1) {
+                        q.push({x, k});
+                        vis[x][k] = true;
+                    }
                 }
+                vis[x][n] = true;
             }
 
-            for (int l = 0; l < m; l++) {
-                if (!vis[l][y] && grid[l][y] == 1) {
-                    q.push({l, y});
-                    vis[l][y] = true;
+            if (!vis[m][y]) {
+                for (int l = 0; l < m; l++) {
+                    if (!vis[l][y] && grid[l][y] == 1) {
+                        q.push({l, y});
+                        vis[l][y] = true;
+                    }
                 }
+                vis[m][y] = true;
             }
         }
 
@@ -31,7 +37,7 @@ private:
 public:
     int countServers(vector<vector<int>>& grid) {
         int m = grid.size(), n = grid[0].size();
-        vector<vector<bool>> vis(m, vector<bool> (n, false));
+        vector<vector<bool>> vis(m + 1, vector<bool> (n + 1, false));
 
         int serverCount = 0;
         for (int i = 0; i < m; i++) {
