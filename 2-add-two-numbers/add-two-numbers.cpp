@@ -11,28 +11,24 @@
 class Solution {
 public:
     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        ListNode* head1 = l1;
-        ListNode* head2 = l2;
-
-        ListNode* sumHead = new ListNode();  
-        ListNode* ans = sumHead;
-
+        ListNode* dummy = new ListNode(0);
+        ListNode* curr  = dummy;
         int carry = 0;
-
-        while (head1 != nullptr || head2 != nullptr || carry != 0) {
-            int v1 = (head1 != nullptr) ? head1->val : 0;
-            int v2 = (head2 != nullptr) ? head2->val : 0;
-
-            int sum = v1 + v2 + carry;
-            carry = sum / 10;
-
-            ans->next = new ListNode(sum % 10);
-            ans = ans->next; 
-
-            if (head1 != nullptr) head1 = head1->next;
-            if (head2 != nullptr) head2 = head2->next;
+        
+        while (l1 != nullptr || l2 != nullptr || carry != 0) {
+            int sum = carry;
+            if (l1 != nullptr) {
+                sum += l1->val;
+                l1 = l1->next;
+            }
+            if (l2 != nullptr) {
+                sum += l2->val;
+                l2 = l2->next;
+            }
+            carry = sum / 10; // store Carry
+            curr->next = new ListNode(sum % 10); // Store only unit's digit
+            curr = curr->next;
         }
-
-        return sumHead->next; 
+        return dummy->next;
     }
 };
